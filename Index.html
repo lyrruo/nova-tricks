@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nova's Trick School 🐾</title>
+  <!-- React + ReactDOM from CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel so we can write JSX inline -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#fdf6ec;}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const tricks = [
+      { id:1,  name:"Paw",               emoji:"🤝", difficulty:"Easy",   time:"1 hour",  prerequisite:"Sit",        description:"Nova learns to place her paw in your outstretched hand — like a handshake, but better.",
+        videos:[{id:"42OOTnTETNw",title:"Kikopup – Teach your dog to SHAKE"},{id:"uo7Zsaw_K5w",title:"McCann Dogs – Shake-A-Paw"}],
+        steps:["At Nova's level, hold a treat in a closed hand facing upwards.","She'll investigate, sniff, and eventually paw at the hand. Say 'good' and give her a food reward.","Repeat several times, then present your hand without a treat. Reward when she places her paw on it.","Now say 'Paw' and hold your hand out flat. When she paws at it, say 'good' and reward again.","You can now incorporate holding her paw gently and shaking it."]},
+      { id:2,  name:"Hand Touch",        emoji:"👃", difficulty:"Easy",   time:"1 hour",  prerequisite:"None",       description:"Nova moves towards your palm and bops it with her nose!",
+        videos:[{id:"zC1VkZG9g3M",title:"Puppy Training – Nose to Hand Touch"}],
+        steps:["Start with both hands behind your back and Nova in front of you.","Move your open palm in front of her — she'll likely sniff it. Say 'good' and reward.","Put your hand back and repeat until she's confidently making nose contact.","Now say 'touch' before presenting your hand and reward the same way.","Increase how far away she has to travel to bop your hand.","Gradually increase the distance until she can be across the room and run to touch your hand."]},
+      { id:3,  name:"Spin",              emoji:"🌀", difficulty:"Medium", time:"2 hours", prerequisite:"None",       description:"Nova walks in a tight circle on the cue 'spin'.",
+        videos:[{id:"THj8nVFnJ2U",title:"Battersea – Teach your dog to spin"},{id:"hJza51DsXIM",title:"Dog Tricks – Spin On Command"}],
+        steps:["Have Nova in a heel position next to your leg, facing the same direction.","Hold a treat at her nose and move your hand in a circle out and away from you (like breaststroke).","Reward at half a circle first, then build to a full circle.","Once fluid, say 'spin' and move your hand the same way, rewarding as before.","Repeat as she becomes more confident.","Reduce gesturing each time until you simply say 'spin' and Nova moves."]},
+      { id:4,  name:"Middle",            emoji:"🦵", difficulty:"Easy",   time:"2 hours", prerequisite:"None",       description:"Nova comes to stand between your legs and looks up at you.",
+        videos:[{id:"KpPErj6xVZ0",title:"Puppy Trick Training – Middle / Peek-A-Boo"},{id:"_6O1EZB41B8",title:"Teach the MIDDLE command in 5 steps"}],
+        steps:["Have Nova in front of you. Hold a treat at her nose.","Move your hand slowly round behind you so it ends up between your legs from behind.","Have your other hand ready to pass the treat through your legs to encourage her through.","Once her head and shoulders are poking through, stop and reward.","Repeat until it's nice and fluid.","Say 'middle' and move your hands as before. Over time reduce gesturing until she does it on just the verbal cue."]},
+      { id:5,  name:"Figure of 8",       emoji:"8️⃣", difficulty:"Medium", time:"3 hours", prerequisite:"None",       description:"Nova makes a figure of 8 pattern weaving through your legs.",
+        videos:[{id:"kSIg5g0Ohqo",title:"Dogs Trust – The Figure Eight"},{id:"qPMTDaYAiKg",title:"Teach your dog to WEAVE through legs / Figure 8"}],
+        steps:["Hold treats in both closed hands.","Guide one hand near her nose, moving it backwards and between your legs.","Let Nova follow the treat through.","Meet with your other hand and guide her round the other side and back through — then reward.","Once easy, say 'figure' or 'weave' before moving your hands at all to add the verbal cue.","Gradually fade out how much gesturing each part requires."]},
+      { id:6,  name:"Paws Up",           emoji:"🪨", difficulty:"Easy",   time:"2 hours", prerequisite:"None",       description:"Nova puts her front paws on a raised object — great for photos!",
+        videos:[{id:"lbvBOA-KIRE",title:"Journey Dog Training – Paws Up Trick"},{id:"MTqebkIPziU",title:"Training Challenge Day 5 – Paws Up"}],
+        steps:["With your chosen object nearby, hold a treat and move your hand so Nova follows towards it.","At the point her feet meet the edge, raise your hand slightly to encourage her to step up.","As soon as her feet are up, say 'good' and reward.","Repeat until fluid, then say 'paws up' and gesture the same way.","Build up how long she stays up before you say 'good' and reward."]},
+      { id:7,  name:"Bow",               emoji:"🎭", difficulty:"Medium", time:"4 hours", prerequisite:"None",       description:"Nova bows — front half down, bottom in the air.",
+        videos:[{id:"pT7-CHam2HU",title:"How to teach BOW – Dog Tricks tutorial"},{id:"XkvkrkHe1Sk",title:"Battersea – Teach your dog to take a bow"}],
+        steps:["Hold a treat at her nose, gradually lower it towards her chest so her front legs start to lower.","Reward before she goes into a full down — you want front low but bottom still up.","Repeat, gradually getting her front legs lower until she's in the play bow position.","Reward each time she hits this position.","Say 'bow' or 'bend' and gesture the same way.","If she has a strong 'down', place your arm gently under her hips to keep her bottom up."]},
+      { id:8,  name:"Shake Head",        emoji:"🤦", difficulty:"Easy",   time:"2 hours", prerequisite:"Sit",        description:"Nova nods or shakes her head on cue.",
+        videos:[{id:"eDtmi48oN2I",title:"Teach Your Dog To Wave / Head Shake tutorial"}],
+        steps:["Start with Nova in a sit.","Have a tasty treat between finger and thumb.","Move the treat either side (or up and down) so Nova follows it and has to move her head.","Once she's gone side to side, say 'good' and reward.","Repeat so she understands she's being rewarded for head movements.","Add the verbal cue 'what do you say?', continue moving your hand, and reward. Slowly reduce the gesture."]},
+      { id:9,  name:"Snoot",             emoji:"⭕", difficulty:"Easy",   time:"2 hours", prerequisite:"None",       description:"Nova places her nose/muzzle through a circle made by your hands.",
+        videos:[{id:"EqhAIADDl6A",title:"Dogs Trust – Teach the Snoot Challenge"},{id:"8bvh_srUmVg",title:"Dogs Trust – Snoot Challenge Tutorial"}],
+        steps:["Make a circle with your finger and thumb — this is where her nose will go.","Place a treat on your side of the hole so she pushes her nose through to reach it.","Build up the time she holds her nose in position before rewarding.","Add the verbal cue 'snoot' before presenting your circle.","If she immediately puts her nose there, say 'good' and reward.","If she hesitates, wait a few seconds. Build up the time she holds position before rewarding."]},
+      { id:10, name:"Jump Over",         emoji:"🏅", difficulty:"Easy",   time:"2 hours", prerequisite:"Stay",       description:"Nova jumps over an obstacle. Suitable for dogs over 1 year of age.",
+        videos:[{id:"3m-S2vRHG5o",title:"McCann Dogs – How To Teach A Dog To Jump"},{id:"0P35xUGioSs",title:"Teach Your Dog to Jump over a Bar"}],
+        steps:["Have Nova in a sit/stay on one side of a very low jump, toy ready.","Stand on the other side, say 'over' and move backwards to encourage her to come.","When she gets over, have a really good play with her.","Repeat so she learns 'over' means go over the jump.","Stand to the side and practice — say 'over', reward with play as she lands.","Incorporate multiple jumps in a row without needing a sit/stay between each one."]},
+      { id:11, name:"Roll Out Yoga Mat", emoji:"🧘", difficulty:"Easy",   time:"2 hours", prerequisite:"None",       description:"Nova rolls out your yoga mat to help you prepare!",
+        videos:[{id:"Fj3f_iP6lJw",title:"Brain Games – Teach Your Dog to Clean Up / Unroll"}],
+        steps:["Lay the mat flat then roll it up, hiding a treat in each roll.","Leave a small section at the end with treats sprinkled on it.","Let Nova explore the mat and eat the visible treats.","Help by unrolling a little bit initially if needed.","Use fewer treats in the mat over repetitions until it's a smooth roll-out.","Add the cue 'do you want to do some yoga?' before placing the mat down once she's confident."]},
+      { id:12, name:"Crawl",             emoji:"🐛", difficulty:"Easy",   time:"2 hours", prerequisite:"Down",       description:"Nova commando crawls towards you.",
+        videos:[{id:"THZVkTgvUmc",title:"Dog Tricks – Crawl Forward On Command"},{id:"SzgAUjhGnDs",title:"Teach Your Dog to Crawl: The Only Video You'll Need!"}],
+        steps:["Ask Nova to lie down.","Hold a closed hand of treats close to her nose.","Draw your hand back really slowly, keeping it slightly lower than her nose.","As soon as she shuffles forwards at all, reward her.","Keep rewarding every little shuffle until she's confident with the movement.","Build up the distance, then add the verbal cue 'crawl'. Reduce luring over repetitions."]},
+      { id:13, name:"Sit Pretty",        emoji:"🧸", difficulty:"Medium", time:"4 hours", prerequisite:"Sit",        description:"Nova sits on her haunches with paws up — adorable!",
+        videos:[{id:"xZH5LJpV6Wo",title:"How to teach your dog to SIT PRETTY"},{id:"IQUerO0woqw",title:"Kikopup – Teach Sit Pretty"}],
+        steps:["Ask Nova to sit.","Hold a closed hand of treats at her nose without letting her have any.","Slowly raise your hand — reward as soon as one or both paws lift.","Gradually extend the time she holds position before rewarding.","Over repetitions she'll build the core strength needed.","Add the cue 'pretty' or 'say please'. Build her strength gradually over sessions."]},
+      { id:14, name:"Walk Backwards",    emoji:"⬅️", difficulty:"Medium", time:"3 hours", prerequisite:"None",       description:"Nova walks backwards away from you in a straight line.",
+        videos:[{id:"tCJNt2maTto",title:"Dog Tricks – Walk Backwards On Command"},{id:"lqR57PTKUQY",title:"Robert Cabral – Teach Your Dog to Walk Backwards"}],
+        steps:["Have Nova standing in front of you with a treat in a closed hand.","Place your hand on her nose and gently move it towards her so she steps back — say 'good'.","Build up how many steps backwards before each reward.","Say 'back' before moving your hand towards her.","On the 5th or 6th go, simply say 'back' and wait for her to move herself.","Make it more fluid by practicing more and expecting a few more steps each time."]},
+      { id:15, name:"Roll Over",         emoji:"🔄", difficulty:"Easy",   time:"2 hours", prerequisite:"Down",       description:"Nova rolls all the way over!",
+        videos:[{id:"-d-BTGv6LJc",title:"McCann Dogs – How To Teach Your Dog To Roll Over"},{id:"C1V3YMTgEF4",title:"Teach Your Dog To Roll Over"}],
+        steps:["Ask Nova to lie down with one hip tucked under (a relaxed down).","Hold a closed hand of treats at her nose and move it slowly in a loop so she follows.","She should follow the treat all the way so her whole body rolls — use a tasty treat!","Reward once she's flopped back the right way up.","Add the verbal cue 'roll over' once the movement is reliable.","Note: suitable for physically fit dogs — older or arthritic dogs may find this too demanding."]},
+      { id:16, name:"Ring a Bell",       emoji:"🔔", difficulty:"Easy",   time:"1 hour",  prerequisite:"None",       description:"Nova rings a bell when asked.",
+        videos:[{id:"P4PuRji9sNY",title:"Ring a Bell Trick – Dog Training"},{id:"cWaB1e5BQyU",title:"Teach Your Dog How to Ring a Bell"}],
+        steps:["Hide the bell behind your back, present it and wait for her to sniff — reward and remove.","Repeat until she's confident that interacting with the bell earns rewards.","Now wait for a paw tap — reward as soon as her foot moves towards or touches the bell.","Repeat a few times.","Once she's hitting it regularly, only reward when she makes the bell actually ring."]},
+      { id:17, name:"Back Up Onto Object",emoji:"⬆️",difficulty:"Medium", time:"3 hours", prerequisite:"Walk Backwards",description:"Nova walks backwards and places her back paws onto a raised object.",
+        videos:[{id:"A0SLEdI9_lc",title:"Teach Your Dog the Paws Up and Off Tricks"},{id:"tCJNt2maTto",title:"Walk Backwards – prerequisite foundation"}],
+        steps:["Have your chosen object and a handful of treats.","Lure Nova onto the object so she initially has front paws on, then reward just back paws on it.","Repeat several times from different angles.","Step away and reverse her back onto the object with a hand lure — she'll learn to find it with her back paws.","Add the verbal cue 'get up' and repeat. Once fluid, just say the cue.","Once great on one object, try a different one."]},
+      { id:18, name:"Chin on Floor",     emoji:"😢", difficulty:"Easy",   time:"1 hour",  prerequisite:"Down",       description:"Nova looks 'sad' with her chin resting between her paws on the floor.",
+        videos:[{id:"ULMHAU3nG9E",title:"Teach Your Dog the 'Head Down' Trick"},{id:"Kd5NJW8Z5Ew",title:"Training Challenge – Head Down"}],
+        steps:["Ask Nova to lie down, then hold a closed hand of treats on her nose.","Slowly lower your hand until her chin hits the floor — say 'good' and reward.","Repeat until fluid and she can hold it for a few seconds.","Add the cue 'chin' or 'sad' and lure the same way.","Reduce how much gesturing you're doing each time."]},
+      { id:19, name:"Stand Up",          emoji:"🧍", difficulty:"Medium", time:"3 hours", prerequisite:"None",       description:"Nova stands up on her back legs like a human — very fun!",
+        videos:[{id:"zHQv8tsfuh0",title:"McCann Dogs – Teach Your Dog To Walk On Hind Legs"},{id:"2PRQCX4Hf3M",title:"Teach Your Dog To Stand On TWO LEGS!"}],
+        steps:["Have Nova standing and move treats from her nose upwards.","Reward any movement with her front legs off the floor.","Once reliably standing on back legs, increase the duration she maintains the position.","Now say your cue 'stand up'.","Lure the same way and reduce how much luring you do as she improves."]},
+      { id:20, name:"Walk Across a Beam",emoji:"🤸", difficulty:"Easy",   time:"1 hour",  prerequisite:"Plank of wood",description:"Nova balances and walks across a beam.",
+        videos:[{id:"_c5XOd4zMuI",title:"Teaching Your Dog Paws Up & body awareness (beam foundation)"}],
+        steps:["Have the plank on the floor without wobbling. Place a treat every 10cm.","Lure all 4 paws onto the plank and let her find each treat.","Repeat with fewer treats each time.","Try the plank slightly raised — walk alongside Nova and reward her for crossing.","Once confident, set her up with just one treat at the end.","Add the cue 'walk on it' and practice with fewer treats, always rewarding at the end."]},
+      { id:21, name:"Pivot Round Object",emoji:"🎡", difficulty:"Medium", time:"3 hours", prerequisite:"Paws Up",    description:"Nova puts her paws on an object and walks round it on her back legs.",
+        videos:[{id:"MTqebkIPziU",title:"Paws Up – prerequisite foundation for pivot"},{id:"lbvBOA-KIRE",title:"Journey Dog Training – Paws Up & pivot intro"}],
+        steps:["Lure Nova up onto the object as you did for Paws Up.","Once in position, do not reward immediately.","Move yourself slightly to the side — she'll reshuffle to face you. At that point say 'good' and reward.","Repeat, rewarding each movement, until you get a full circle.","Fade out how much you move — gesture or rock rather than taking full steps.","Over time she'll move more fluidly for fewer treats until she can circle without much help."]},
+      { id:22, name:"Hold",              emoji:"👄", difficulty:"Medium", time:"3 hours", prerequisite:"Sit",        description:"Nova holds an object in her mouth.",
+        videos:[{id:"dCVaqNPtIoQ",title:"Teach Your Dog To Hold A Toy"},{id:"cbfQ5qp-33M",title:"How To Teach Your Dog To HOLD Anything!!!"}],
+        steps:["Choose an object that fits comfortably in Nova's mouth — a round toy works well.","Encourage her to take it in her mouth — say 'good' immediately and reward.","Don't allow her to play with it; you want a calm hold.","Build up how long she'll hold the toy. Start by aiming for just 1 second.","Present the toy — when she takes it, wait one second then say 'good' and reward.","Gradually build up the duration over sessions."]},
+      { id:23, name:"Kiss",              emoji:"😘", difficulty:"Easy",   time:"2 hours", prerequisite:"Snoot",      description:"Nova holds her nose against your cheek.",
+        videos:[{id:"EqhAIADDl6A",title:"Dogs Trust – Snoot Challenge (prerequisite for Kiss)"}],
+        steps:["Teach Nova to nose-touch the tip of your first finger — reward when she touches it.","Build up to her holding her nose on your finger for around 5 seconds.","Move your finger closer and closer to your cheek, rewarding each 5-second touch.","Position your finger pointing at or touching your cheek.","Reward for touching and holding for 5 seconds — rebuild duration in this new position.","Add your cue 'can I have a kiss?' and place your finger on your cheek."]},
+      { id:24, name:"Wave",              emoji:"👋", difficulty:"Medium", time:"3 hours", prerequisite:"Paw",        description:"Nova waves her paw at you.",
+        videos:[{id:"TteXPPLvAGc",title:"How to teach your dog to wave bye"},{id:"8ajQpNAq7no",title:"Teach Your Dog To Wave – Trickmas Day 11"}],
+        steps:["Hold your hand as for Paw and reward her for placing her foot there.","Raise your hand higher each time so she has to reach more.","When she tries to paw, remove your hand slightly — say 'good' as she attempts it and reward.","Repeat until she's waving several times — reward after a few waves.","Add the cue 'wave' and do the same.","Reduce hand gesturing until she waves on the verbal cue alone."]},
+      { id:25, name:"Close the Door",    emoji:"🚪", difficulty:"Easy",   time:"2 hours", prerequisite:"None",       description:"Nova pulls a door shut.",
+        videos:[{id:"4lL3Js-E1Bc",title:"How to teach your dog to CLOSE DOORS!"},{id:"60KTVMHGFZQ",title:"Push – Teach Your Dog to Close Doors & Drawers"}],
+        steps:["Teach Nova to touch a post-it note with nose or paw and reward.","Stick the post-it on the door and reward her for touching or pawing at it.","Withhold rewards until she makes the door move — reward when it closes enough to make a noise.","Open the door further each time and repeat.","Add the cue 'close the door' with the post-it still in place.","Once she understands the cue, remove the post-it and just use the cue."]},
+      { id:26, name:"Tell Me a Secret",  emoji:"🤫", difficulty:"Medium", time:"2 hours", prerequisite:"Kiss",       description:"Nova presses her nose against your ear as if whispering a secret.",
+        videos:[{id:"EqhAIADDl6A",title:"Snoot & Kiss foundation (prerequisite for this trick)"}],
+        steps:["Cup your hand as if listening to something.","Teach Nova to press her muzzle against your cupped palm.","Reward sniffing or any interaction at first, then build to 5 seconds.","Gradually move your hand closer to your ear, rewarding for holding position.","Cover your ear and reward Nova for holding her nose there for 5 seconds.","Add the verbal cue 'can you tell me a secret?'"]},
+      { id:27, name:"Push Object",       emoji:"🚗", difficulty:"Easy",   time:"2 hours", prerequisite:"None",       description:"Nova pushes a toy car or object with her nose.",
+        videos:[{id:"zC1VkZG9g3M",title:"Hand Touch / nose targeting – foundation for this trick"}],
+        steps:["Present the object and wait for a sniff or interaction — say 'good', reward, remove.","Re-present and wait for a nose touch or shuffle — reward.","Over repetitions, increase how much contact you require before rewarding.","If the object moves, reward doubly.","Build up how far she moves the object."]},
+      { id:28, name:"Fetch",             emoji:"🎾", difficulty:"Medium", time:"2 hours", prerequisite:"None",       description:"Nova brings back something you've thrown — a classic!",
+        videos:[{id:"MGZwydOtPx0",title:"Training Positive – Teach Your Dog To FETCH Perfectly!"},{id:"62sjzalZX34",title:"Struggling with Retrieve? Watch This!"}],
+        steps:["Find a toy she's interested in holding or picking up.","Drop the toy — say 'good' as soon as she picks it up and raises her head.","Build up until she holds it in front of you for a second or two.","Put your hand on the toy before saying 'good' so she drops it into your hand.","Repeat until reliable.","Build up how far you throw the toy — over sessions, gradually increase the distance."]},
+      { id:29, name:"Cross Legs",        emoji:"✨", difficulty:"Medium", time:"3 hours", prerequisite:"Down",       description:"Nova lies down elegantly with her paws crossed.",
+        videos:[{id:"xv7naqQJnlw",title:"Train Your Dog to Cross Paws!"},{id:"pYMJ1ERLXSk",title:"Teaching dog tricks: cross paws"}],
+        steps:["Practice a few Paws to warm up.","Ask her into a down and ask for Paw — reward her.","Practice this until she reliably gives paw while staying in the down.","Gently move her paw so it lands on top of the other — say 'good' and reward immediately.","Keep rewarding for as long as she keeps paws crossed — stop rewarding if she moves them.","Repeat lots, then encourage her to cross over herself. Add the cue 'cross'."]},
+      { id:30, name:"Walk Round a Cone", emoji:"🦺", difficulty:"Easy",   time:"2 hours", prerequisite:"None",       description:"Nova walks round a cone or any object.",
+        videos:[{id:"qPMTDaYAiKg",title:"Teach your dog to WEAVE / Walk Round Objects"}],
+        steps:["Place the cone down and reward Nova for any movement towards it.","Throw the treat away to reset, then reward her on the far side of the cone.","Throw a treat away again to complete the full circle.","Repeat, then try not rewarding halfway round.","Once circling confidently, increase how far she walks to reach the cone.","Add the cue 'go around' before she sets off."]},
+      { id:31, name:"Jump Onto Back",    emoji:"🐎", difficulty:"Hard",   time:"4 hours", prerequisite:"Balance",    description:"Nova jumps onto your back!",
+        videos:[{id:"OQRLWZfAa74",title:"McCann Dogs – Teach Your Dog To Jump (foundation)"}],
+        steps:["Get on all fours to stabilise yourself — have treats in hand.","Encourage Nova to place all four legs onto your back, guiding with your hand position.","Reward half-attempts first, then a full jump.","Build up your core strength and practice with you gradually more upright each time."]},
+      { id:32, name:"Leg Weaves",        emoji:"🎪", difficulty:"Easy",   time:"3 hours", prerequisite:"Figure of 8",description:"Nova walks through your legs as you walk.",
+        videos:[{id:"NPlisMpiTL0",title:"McCann Dogs – Teach Your Dog To Weave Through Your Legs"},{id:"Rff_bljpC0g",title:"Battersea – Teach your dog to weave between your legs"}],
+        steps:["Start with a treat in each hand and practice moving side to side.","Spread your legs as if stepping forward and lure Nova through.","Take a step with the other leg and repeat.","Make it fluid so she doesn't hesitate.","Reduce the lure — show the hand behind your leg but only reward at your side. Build up steps."]},
+      { id:33, name:"Be Shy",            emoji:"🙈", difficulty:"Easy",   time:"3 hours", prerequisite:"Down",       description:"Nova puts her paw on her nose — adorable!",
+        videos:[{id:"YoJZsaWA3sA",title:"How to teach your dog: COVER YOUR EYES / BE SHY"},{id:"AmKxhuWLNog",title:"How to teach your dog to be shy"}],
+        steps:["Roll a small piece of sticky tape (both sides sticky) and place on her nose.","Say 'good' and reward as soon as she tries to remove it — take the tape off after each reward.","Reward any paw movement towards her nose extra generously.","Add the cue 'are you shy?' and continue rewarding paw-to-nose movements.","Once consistent, pretend to place tape (hand gesture only) and say the cue — reward attempts.","Finally, reduce the hand gesture and just use the verbal cue."]},
+      { id:34, name:"Orbit",             emoji:"🌍", difficulty:"Hard",   time:"4 hours", prerequisite:"Walk Backwards",description:"Nova walks round you backwards — impressive!",
+        videos:[{id:"InvGz8uLpx0",title:"Trick Training – Teaching the Orbit"},{id:"fiqLEMH_8zk",title:"How to Teach Your Dog to ORBIT"}],
+        steps:["Have treats in both hands and Nova in a heel position.","Move one hand gently into her (as for Walk Backwards) but direct it behind your back.","Reward when you can't reach further, then meet with your other hand and continue.","Reward again once she's back in front of you.","Guide her around until she's back in the original heel position.","Reduce interval rewards to one at the end. Add 'orbit' and reduce gestures."]},
+      { id:35, name:"Jump Into Arms",    emoji:"🤗", difficulty:"Hard",   time:"4 hours", prerequisite:"None",       description:"Nova jumps into your arms for a cuddle!",
+        videos:[{id:"dkf2WZn1tY4",title:"McCann – Teach Your Dog To Jump Up Into Your Arms"},{id:"1LCaivl0bmU",title:"Easy Trick! Teach Your Dog to Jump Into Your Arms"}],
+        steps:["Start sitting cross-legged on the floor with Nova to your side.","Lure her onto your lap so all four paws are across your legs.","Repeat until she's confident standing on you.","Add the cue 'up up' once she's reliably getting on.","Use a chair to raise yourself slightly and repeat with 'up up'.","Remove the chair, crouch with one knee up, and gradually stand more upright each time."]},
+      { id:36, name:"Wrap Up",           emoji:"🌯", difficulty:"Hard",   time:"4 hours", prerequisite:"Down",       description:"Nova rolls herself up in her blanket.",
+        videos:[{id:"-d-BTGv6LJc",title:"McCann Dogs – Roll Over (core component)"},{id:"dCVaqNPtIoQ",title:"Teach Your Dog To Hold A Toy (core component)"}],
+        steps:["Practice having Nova hold the blanket in her mouth.","Reward for picking it up off the floor and holding it.","Practice Roll Over while she's lying on the laid-out blanket.","Combine: lay her on the blanket, bunch some up between her paws for her to hold.","Once holding, ask her to roll over — reward only if she holds AND rolls.","Practice until fluid, then add the cue 'wrap up'."]},
+      { id:37, name:"Speak",             emoji:"📢", difficulty:"Medium", time:"2 hours", prerequisite:"None",       description:"Nova barks on cue — and only on cue!",
+        videos:[{id:"w0TASn4OhZc",title:"Zak George – How to Teach your Dog to Speak"},{id:"5SadtOFNzP0",title:"How to Teach Your Dog to SPEAK in 1 MINUTE"}],
+        steps:["When Nova barks predictably, say 'good' and reward the bark.","If she barks again, repeat.","Now before she barks, say 'speak' — if she barks, reward.","Ask for other behaviours in between, then 'speak' to make the cue deliberate.","This must be taught well so Nova only barks when asked.","If she barks without you asking after the cue is established, do not reward her."]},
+      { id:38, name:"Jump Through Arms", emoji:"🎠", difficulty:"Easy",   time:"3 hours", prerequisite:"Sit",        description:"Nova jumps through a hoop made by your arms — circus dog!",
+        videos:[{id:"lJzica-iTqM",title:"AKC – Teach Your Dog How To Jump Through Arms"},{id:"EXm7uK9Jw9E",title:"How to teach your dog to jump through your arms"}],
+        steps:["Work in a doorway with Nova on one side and a treat on the other.","Ask Nova to sit and wait so she doesn't steal the treat.","Place one arm 5–10cm across the door frame — release her with 'through'.","Tap the floor with your other hand if she needs encouragement.","Once reliable, create a hoop with both arms and repeat.","Practice without a treat on the other side — reward from your treat pouch. Gradually raise the height."]},
+      { id:39, name:"Do the Laundry",    emoji:"🧺", difficulty:"Medium", time:"4 hours", prerequisite:"Drop",       description:"Nova moves laundry from the basket into the washing machine!",
+        videos:[{id:"W7pSQaHXyS8",title:"Teach a Dog to Do the Laundry"},{id:"a0VEj84Hj-g",title:"I taught my dog to do the laundry"}],
+        steps:["Offer clothing to Nova — if she takes it, ask her to 'drop' into the basket and reward.","Repeat. If she misses the basket, don't reward.","Build in movement — offer clothing slightly offset so she has to move before dropping.","Gradually increase the distance until your hand is inside the washing machine.","Put clothing in the machine and point — reward when she picks it up and puts it in.","Add the cue 'do the laundry'. Build to encouraging multiple items before rewarding."]},
+      { id:40, name:"Play Dead",         emoji:"💀", difficulty:"Easy",   time:"2 hours", prerequisite:"Down",       description:"Nova plays dead — also known as the 'bang!' trick.",
+        videos:[{id:"hWIdwfpYZb4",title:"Bang Bang! FAST Way to Teach Your Dog to Play Dead!"},{id:"4tu69AKmOdw",title:"Dog TRICK TUTORIAL: BANG! Play Dead!"}],
+        steps:["Have Nova in a down with one hip to one side (relaxed down).","Place a closed hand at her nose and move it slightly back and up so her head lays flat.","Reward when her head is flat on the floor and repeat.","Add the cue 'play dead', 'bang' or 'go to sleep'.","Build up the time her head is flat — ideally 5–10 seconds, tail not wagging.","Fade out the lure and change the gesture to look like a pointing gun hand."]},
+      { id:41, name:"Say Prayers",       emoji:"🙏", difficulty:"Medium", time:"3 hours", prerequisite:"Paws Up",    description:"Nova puts her paws up on an object and bows her head — like praying.",
+        videos:[{id:"KtyRBVLh9NQ",title:"Howcast – How to Teach Your Dog to Say Prayers"}],
+        steps:["Ask Nova to put her paws up on the object — high enough that she has to reach.","Hold treats under her chin so she lowers her head between her paws.","Reward when her head is bent down.","Repeat until fluid — you'll do less and less prompting each time.","Add the cue 'pray'.","Build up how long she holds the praying position before you reward."]},
+      { id:42, name:"Fake Pee",          emoji:"🐕", difficulty:"Hard",   time:"4 hours", prerequisite:"None",       description:"Nova lifts her leg as if she's peeing — a funny one!",
+        videos:[{id:"zHQv8tsfuh0",title:"Stand Up on hind legs – hind leg awareness foundation"}],
+        steps:["Place an object with an uneven top so she straddles it with front and back legs.","Lure her slightly forward — reward as soon as one back leg moves upwards to avoid the object.","Repeat until she understands she's rewarded for lifting her leg.","Build up the time her leg is up before rewarding.","Add a cue.","Gradually reduce the object until you can cue the behaviour with nothing underneath her."]},
+      { id:43, name:"Open a Door",       emoji:"🔓", difficulty:"Easy",   time:"1 hour",  prerequisite:"None",       description:"Nova opens the door — a practical and impressive trick!",
+        videos:[{id:"5EqALzQpQEk",title:"Train Your Dog to Open Doors with a Tug"},{id:"K78SPdWzzio",title:"How to train your dog to open doors"}],
+        steps:["Tie a long tuggy toy to the door handle so pulling it opens the door.","Encourage Nova to grab it and see if she'll hold and pull. Reward if she holds.","Reward attempts at a tug, then bigger tugs, until the door opens.","Reduce how much toy there is to grab hold of over time."]},
+      { id:44, name:"Go to Bed",         emoji:"🛏️", difficulty:"Easy",   time:"3 hours", prerequisite:"Down",       description:"Nova goes to her bed on command.",
+        videos:[{id:"5RVDV5bQi5Q",title:"McCann Dogs – Teach Your Dog To Go To Bed And RELAX"},{id:"xTKKQfT2nbY",title:"McCann Dogs – Teach Your Dog To 'Go To Bed'"}],
+        steps:["Scatter treats into Nova's bed so she goes to eat them.","Toss a treat away so she moves off, then reward her for stepping back onto the bed.","Reward a few times on the bed, then toss a treat away to reset.","Wait for her to offer a sit or down on the bed — don't cue it, just reward it.","Say 'bed' as she's heading towards it once she's reliably going.","Step further and further from the bed so she's not reliant on you being close."]},
+      { id:45, name:"Tidy Up",           emoji:"🧹", difficulty:"Medium", time:"4 hours", prerequisite:"Drop",       description:"Nova tidies her toys away into her toy box!",
+        videos:[{id:"K8RYBsAbt-E",title:"Dogs Trust – Teaching your dog to tidy up!"},{id:"O34UGTnfQ08",title:"Training Positive – Dog Training Tutorial: Clean Up"}],
+        steps:["Have the toy box out and offer Nova a toy — ask her to 'drop' into the box and reward.","Repeat. If she misses the box, don't reward.","Build up the distance she carries the toy before dropping.","Offer the toy at gradually increasing distances. Drop the 'drop' cue once reliable.","Put the toy on the floor and point — reward when she picks it up and puts it in the box.","Add the cue 'tidy up' and reward in the same way."]}
+    ];
+
+    const DC = {
+      Easy:   { bg:"#e8f5e9", text:"#2e7d32" },
+      Medium: { bg:"#fff8e1", text:"#f57f17" },
+      Hard:   { bg:"#fce4ec", text:"#b71c1c" },
+    };
+
+    function App() {
+      const [learned,    setLearned]    = useState(new Set());
+      const [inProgress, setInProgress] = useState(new Set());
+      const [filter,     setFilter]     = useState("All");
+      const [search,     setSearch]     = useState("");
+      const [openId,     setOpenId]     = useState(null);
+      const [tab,        setTab]        = useState("steps");
+      const [activeStep, setActiveStep] = useState(0);
+
+      const openModal  = id => { setOpenId(id); setTab("steps"); setActiveStep(0); };
+      const closeModal = ()  => setOpenId(null);
+
+      const toggleLearned = id => setLearned(prev => {
+        const n = new Set(prev);
+        if (n.has(id)) { n.delete(id); } else { n.add(id); setInProgress(p => { const m=new Set(p); m.delete(id); return m; }); }
+        return n;
+      });
+      const toggleInProgress = id => setInProgress(prev => {
+        const n = new Set(prev);
+        if (n.has(id)) { n.delete(id); } else { n.add(id); setLearned(p => { const m=new Set(p); m.delete(id); return m; }); }
+        return n;
+      });
+
+      const filtered = tricks.filter(t => {
+        const dm = filter==="All" || t.difficulty===filter
+          || (filter==="Learned"  && learned.has(t.id))
+          || (filter==="Learning" && inProgress.has(t.id));
+        const sm = t.name.toLowerCase().includes(search.toLowerCase())
+          || t.description.toLowerCase().includes(search.toLowerCase());
+        return dm && sm;
+      });
+
+      const trick      = openId ? tricks.find(t => t.id === openId) : null;
+      const learnedCnt = learned.size;
+      const ipCnt      = inProgress.size;
+      const pct        = Math.round((learnedCnt / 45) * 100);
+
+      return (
+        <>
+          <style>{`
+            .app{min-height:100vh;background:#fdf6ec;font-family:'Nunito',sans-serif;color:#3d2c1e;max-width:480px;margin:0 auto;}
+            .hdr{background:linear-gradient(135deg,#c8832a,#e8a94a,#d4903a);padding:28px 20px 22px;text-align:center;position:relative;overflow:hidden;}
+            .hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,.08);border-radius:50%;}
+            .hdr::after{content:'';position:absolute;bottom:-50px;left:-20px;width:140px;height:140px;background:rgba(255,255,255,.06);border-radius:50%;}
+            .hdr-paws{font-size:22px;letter-spacing:6px;margin-bottom:5px;opacity:.8;}
+            .hdr h1{font-family:'Fredoka One',cursive;font-size:32px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.15);line-height:1.1;margin-bottom:3px;}
+            .hdr p{color:rgba(255,255,255,.9);font-size:13px;font-weight:600;}
+            .stats{display:flex;gap:9px;padding:13px 13px 0;flex-wrap:wrap;}
+            .sc{flex:1;min-width:68px;background:#fff;border-radius:13px;padding:11px 9px;text-align:center;box-shadow:0 2px 8px rgba(200,131,42,.10);border:2px solid #f5e0c0;}
+            .sn{font-family:'Fredoka One',cursive;font-size:24px;color:#c8832a;line-height:1;}
+            .sl{font-size:10px;color:#a08060;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+            .prog{padding:11px 13px 0;}
+            .pl{font-size:11px;font-weight:700;color:#a08060;margin-bottom:4px;display:flex;justify-content:space-between;}
+            .pt{background:#f0e4d0;border-radius:20px;height:9px;overflow:hidden;}
+            .pf{height:100%;border-radius:20px;background:linear-gradient(90deg,#c8832a,#e8a94a);transition:width .5s;}
+            .ctrl{padding:11px 13px 0;display:flex;flex-direction:column;gap:7px;}
+            .sb{width:100%;padding:10px 13px;border:2px solid #f0e4d0;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;color:#3d2c1e;background:#fff;outline:none;transition:border-color .2s;}
+            .sb:focus{border-color:#c8832a;}
+            .fr{display:flex;gap:6px;flex-wrap:wrap;}
+            .fb{padding:6px 11px;border-radius:17px;border:2px solid #f0e4d0;background:#fff;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#a08060;cursor:pointer;transition:all .2s;white-space:nowrap;}
+            .fb.active{background:#c8832a;border-color:#c8832a;color:#fff;}
+            .rc{padding:9px 13px 3px;font-size:11px;color:#a08060;font-weight:600;}
+            .grid{padding:5px 13px 24px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+            .card{background:#fff;border-radius:15px;padding:12px;box-shadow:0 2px 10px rgba(200,131,42,.08);border:2px solid #f5e0c0;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+            .card.learned{border-color:#a5d6a7;background:#f9fff9;}
+            .card.ip{border-color:#ffe082;background:#fffdf5;}
+            .card:active{transform:scale(.97);}
+            .ce{font-size:27px;display:block;margin-bottom:4px;}
+            .cn{font-family:'Fredoka One',cursive;font-size:14px;color:#3d2c1e;margin-bottom:3px;line-height:1.2;}
+            .cbadge{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;margin-bottom:5px;}
+            .cm{font-size:10px;color:#b09070;font-weight:600;line-height:1.6;}
+            .cacts{display:flex;gap:5px;margin-top:7px;}
+            .ab{flex:1;padding:5px 3px;border-radius:8px;border:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;}
+            .ab-p{background:#fff8e1;color:#f57f17;border:1.5px solid #ffe082;}
+            .ab-p.on{background:#ffb300;color:#fff;border-color:#ffb300;}
+            .ab-l{background:#e8f5e9;color:#2e7d32;border:1.5px solid #a5d6a7;}
+            .ab-l.on{background:#43a047;color:#fff;border-color:#43a047;}
+            .sbadge{position:absolute;top:8px;right:8px;font-size:13px;}
+            .empty{text-align:center;padding:36px 16px;color:#b09070;}
+            .empty .eg{font-size:42px;display:block;margin-bottom:9px;}
+            .empty p{font-size:14px;font-weight:600;}
+            .ov{position:fixed;inset:0;background:rgba(61,44,30,.55);z-index:100;display:flex;align-items:flex-end;justify-content:center;}
+            .modal{background:#fdf6ec;border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:0 0 30px;animation:up .28s ease;}
+            @keyframes up{from{transform:translateY(100%);}to{transform:translateY(0);}}
+            .mhandle{width:36px;height:4px;background:#d4b896;border-radius:4px;margin:10px auto 0;}
+            .mhdr{padding:13px 17px 0;display:flex;align-items:flex-start;gap:10px;}
+            .memi{font-size:42px;line-height:1;flex-shrink:0;}
+            .mtitle{font-family:'Fredoka One',cursive;font-size:22px;color:#3d2c1e;line-height:1.2;}
+            .mdesc{font-size:12px;color:#7a6050;margin-top:3px;line-height:1.5;}
+            .mtags{padding:9px 17px 0;display:flex;gap:6px;flex-wrap:wrap;}
+            .mtag{padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;background:#f5e0c0;color:#a08060;}
+            .tabs{display:flex;margin:12px 17px 0;background:#f0e4d0;border-radius:11px;padding:3px;gap:3px;}
+            .tabbtn{flex:1;padding:8px 5px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:#a08060;}
+            .tabbtn.active{background:#fff;color:#c8832a;box-shadow:0 1px 4px rgba(200,131,42,.18);}
+            .snav{padding:10px 17px 0;display:flex;gap:5px;flex-wrap:wrap;}
+            .sdot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;background:#f0e4d0;color:#a08060;border:2px solid transparent;flex-shrink:0;}
+            .sdot.active{background:#c8832a;color:#fff;border-color:#c8832a;}
+            .sdot.done{background:#e8f5e9;color:#43a047;border-color:#a5d6a7;}
+            .scontent{margin:11px 17px 0;background:#fff;border-radius:15px;padding:15px;border:2px solid #f0e4d0;min-height:85px;}
+            .snum{font-family:'Fredoka One',cursive;color:#c8832a;font-size:12px;margin-bottom:5px;}
+            .stxt{font-size:14px;line-height:1.6;color:#3d2c1e;}
+            .sbtns{display:flex;gap:8px;padding:11px 17px 0;}
+            .snbtn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+            .snbtn.prev{background:#f0e4d0;color:#a08060;}
+            .snbtn.next{background:#c8832a;color:#fff;}
+            .snbtn:disabled{opacity:.4;cursor:not-allowed;}
+            .vtab{padding:12px 17px 0;}
+            .vcards{display:flex;flex-direction:column;gap:10px;}
+            .vcard{display:flex;align-items:center;gap:11px;background:#fff;border-radius:14px;border:2px solid #f0e4d0;overflow:hidden;text-decoration:none;color:inherit;transition:all .2s;}
+            .vcard:hover{border-color:#c8832a;box-shadow:0 3px 14px rgba(200,131,42,.18);transform:translateY(-1px);}
+            .vcard:active{transform:scale(0.98);}
+            .vthumb{position:relative;width:110px;min-width:110px;overflow:hidden;background:#1a1a1a;aspect-ratio:16/9;}
+            .vthumb img{width:100%;height:100%;object-fit:cover;display:block;}
+            .vplay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(200,131,42,.45);}
+            .vplay-circle{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+            .vplay-tri{width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid #c8832a;margin-left:2px;}
+            .vinfo{flex:1;padding:10px 11px 10px 0;}
+            .vnum{font-size:10px;font-weight:700;color:#c8832a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+            .vtitle{font-size:12px;font-weight:700;color:#3d2c1e;line-height:1.4;}
+            .vylink{font-size:10px;color:#a08060;font-weight:600;margin-top:4px;}
+            .novid{background:#f5e0c0;border-radius:15px;padding:22px;text-align:center;color:#a08060;}
+            .novid .nve{font-size:34px;display:block;margin-bottom:7px;}
+            .novid p{font-size:12px;font-weight:600;line-height:1.5;}
+            .macts{display:flex;gap:8px;padding:13px 17px 0;}
+            .mact{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+            .mcls{display:block;width:calc(100% - 34px);margin:11px 17px 0;padding:13px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#f0e4d0;color:#7a6050;text-align:center;}
+          `}</style>
+
+          <div className="app">
+            <div className="hdr">
+              <div className="hdr-paws">🐾 🐾 🐾</div>
+              <h1>Nova's Trick School</h1>
+              <p>45 tricks to teach your golden girl 🦴</p>
+            </div>
+
+            <div className="stats">
+              <div className="sc"><div className="sn">45</div><div className="sl">Total</div></div>
+              <div className="sc"><div className="sn" style={{color:"#ffb300"}}>{ipCnt}</div><div className="sl">Learning</div></div>
+              <div className="sc"><div className="sn" style={{color:"#43a047"}}>{learnedCnt}</div><div className="sl">Learned</div></div>
+              <div className="sc"><div className="sn">{pct}%</div><div className="sl">Done</div></div>
+            </div>
+
+            <div className="prog">
+              <div className="pl"><span>Nova's Progress 🌟</span><span>{learnedCnt}/45</span></div>
+              <div className="pt"><div className="pf" style={{width:`${pct}%`}}/></div>
+            </div>
+
+            <div className="ctrl">
+              <input className="sb" placeholder="🔍 Search tricks…" value={search} onChange={e=>setSearch(e.target.value)}/>
+              <div className="fr">
+                {["All","Easy","Medium","Hard","Learning","Learned"].map(f=>(
+                  <button key={f} className={`fb${filter===f?" active":""}`} onClick={()=>setFilter(f)}>
+                    {f==="Easy"?"🟢 Easy":f==="Medium"?"🟡 Medium":f==="Hard"?"🔴 Hard"
+                      :f==="Learned"?"⭐ Learned":f==="Learning"?"🔥 Learning":f}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="rc">{filtered.length} trick{filtered.length!==1?"s":""}</div>
+
+            {filtered.length===0
+              ? <div className="empty"><span className="eg">🐕</span><p>No tricks found!<br/>Try a different filter.</p></div>
+              : <div className="grid">
+                  {filtered.map(t => {
+                    const dc = DC[t.difficulty];
+                    const isl = learned.has(t.id), isip = inProgress.has(t.id);
+                    return (
+                      <div key={t.id} className={`card${isl?" learned":""}${isip?" ip":""}`} onClick={()=>openModal(t.id)}>
+                        {(isl||isip) && <div className="sbadge">{isl?"⭐":"🔥"}</div>}
+                        <span className="ce">{t.emoji}</span>
+                        <div className="cn">{t.name}</div>
+                        <span className="cbadge" style={{background:dc.bg,color:dc.text}}>{t.difficulty}</span>
+                        <div className="cm">⏱ {t.time}</div>
+                        {t.prerequisite!=="None" && <div className="cm">📌 {t.prerequisite}</div>}
+                        <div className="cm">▶ {t.videos.length} video{t.videos.length!==1?"s":""}</div>
+                        <div className="cacts" onClick={e=>e.stopPropagation()}>
+                          <button className={`ab ab-p${isip?" on":""}`} onClick={()=>toggleInProgress(t.id)}>
+                            {isip?"🔥 On it!":"🔥 Start"}
+                          </button>
+                          <button className={`ab ab-l${isl?" on":""}`} onClick={()=>toggleLearned(t.id)}>
+                            {isl?"⭐ Done!":"⭐ Done"}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+            }
+
+            {trick && (
+              <div className="ov" onClick={closeModal}>
+                <div className="modal" onClick={e=>e.stopPropagation()}>
+                  <div className="mhandle"/>
+
+                  <div className="mhdr">
+                    <div className="memi">{trick.emoji}</div>
+                    <div>
+                      <div className="mtitle">{trick.name}</div>
+                      <div className="mdesc">{trick.description}</div>
+                    </div>
+                  </div>
+
+                  <div className="mtags">
+                    <span className="mtag" style={{background:DC[trick.difficulty].bg,color:DC[trick.difficulty].text}}>
+                      {trick.difficulty}
+                    </span>
+                    <span className="mtag">⏱ {trick.time}</span>
+                    {trick.prerequisite!=="None" && <span className="mtag">📌 {trick.prerequisite}</span>}
+                    <span className="mtag">▶ {trick.videos.length} video{trick.videos.length!==1?"s":""}</span>
+                  </div>
+
+                  <div className="tabs">
+                    <button className={`tabbtn${tab==="steps"?" active":""}`} onClick={()=>setTab("steps")}>📋 Steps</button>
+                    <button className={`tabbtn${tab==="video"?" active":""}`} onClick={()=>setTab("video")}>▶️ Watch</button>
+                  </div>
+
+                  {tab==="steps" && <>
+                    <div className="snav">
+                      {trick.steps.map((_,i) => (
+                        <div key={i} className={`sdot${i===activeStep?" active":i<activeStep?" done":""}`}
+                          onClick={()=>setActiveStep(i)}>
+                          {i<activeStep?"✓":i+1}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="scontent">
+                      <div className="snum">Step {activeStep+1} of {trick.steps.length}</div>
+                      <div className="stxt">{trick.steps[activeStep]}</div>
+                    </div>
+                    <div className="sbtns">
+                      <button className="snbtn prev" disabled={activeStep===0}
+                        onClick={()=>setActiveStep(s=>s-1)}>← Back</button>
+                      <button className="snbtn next" disabled={activeStep===trick.steps.length-1}
+                        onClick={()=>setActiveStep(s=>s+1)}>Next →</button>
+                    </div>
+                  </>}
+
+                  {tab==="video" && (
+                    <div className="vtab">
+                      {trick.videos.length===0
+                        ? <div className="novid"><span className="nve">🎬</span><p>No video yet!</p></div>
+                        : <div className="vcards">
+                            {trick.videos.map((v,i) => (
+                              <a key={i} className="vcard"
+                                href={`https://www.youtube.com/watch?v=${v.id}`}
+                                target="_blank" rel="noopener noreferrer">
+                                <div className="vthumb">
+                                  <img src={`https://img.youtube.com/vi/${v.id}/mqdefault.jpg`} alt={v.title}
+                                    onError={e=>e.target.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`}/>
+                                  <div className="vplay">
+                                    <div className="vplay-circle"><div className="vplay-tri"/></div>
+                                  </div>
+                                </div>
+                                <div className="vinfo">
+                                  <div className="vnum">Video {i+1}</div>
+                                  <div className="vtitle">{v.title}</div>
+                                  <div className="vylink">▶ Watch on YouTube</div>
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                      }
+                    </div>
+                  )}
+
+                  <div className="macts">
+                    <button className="mact"
+                      style={inProgress.has(trick.id)
+                        ? {background:"#ffb300",color:"#fff"}
+                        : {background:"#fff8e1",color:"#f57f17",border:"2px solid #ffe082"}}
+                      onClick={()=>toggleInProgress(trick.id)}>
+                      {inProgress.has(trick.id)?"🔥 Learning this!":"🔥 Mark as Learning"}
+                    </button>
+                    <button className="mact"
+                      style={learned.has(trick.id)
+                        ? {background:"#43a047",color:"#fff"}
+                        : {background:"#e8f5e9",color:"#2e7d32",border:"2px solid #a5d6a7"}}
+                      onClick={()=>toggleLearned(trick.id)}>
+                      {learned.has(trick.id)?"⭐ Nova got it!":"⭐ Nova nailed it!"}
+                    </button>
+                  </div>
+                  <button className="mcls" onClick={closeModal}>Close</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App/>);
+  </script>
+</body>
+</html>
