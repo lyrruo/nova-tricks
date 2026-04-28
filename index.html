@@ -156,6 +156,9 @@
       { id:44, name:"Go to Bed",         emoji:"🛏️", difficulty:"Easy",   time:"3 hours", prerequisite:"Down",       description:"Nova goes to her bed on command.",
         videos:[{id:"5RVDV5bQi5Q",title:"McCann Dogs – Teach Your Dog To Go To Bed And RELAX"},{id:"xTKKQfT2nbY",title:"McCann Dogs – Teach Your Dog To 'Go To Bed'"}],
         steps:["Scatter treats into Nova's bed so she goes to eat them.","Toss a treat away so she moves off, then reward her for stepping back onto the bed.","Reward a few times on the bed, then toss a treat away to reset.","Wait for her to offer a sit or down on the bed — don't cue it, just reward it.","Say 'bed' as she's heading towards it once she's reliably going.","Step further and further from the bed so she's not reliant on you being close."]},
+      { id:46, name:"Stay",               emoji:"✋", difficulty:"Easy",   time:"2 hours", prerequisite:"Sit",        description:"Nova holds her position until you give her the release word — an essential foundation for so many other tricks.",
+        videos:[{id:"A-00RbVrTvI",title:"Battersea – How to Teach Your Dog to Stay"},{id:"GAziMECDxD0",title:"Zak George – Teach Your Dog to Stay in 3 Steps Force Free!"}],
+        steps:["Ask Nova to sit. Stand directly in front of her with treats in hand.","Hold your open palm towards her like a stop signal and say 'stay' in a calm, clear voice. If she holds still for even 2–3 seconds, say 'good' and reward her immediately.","Repeat several times, gradually building up how long she holds the stay before you reward — start with 3 seconds, then 5, then 10.","Once she's holding a stay reliably for 10 seconds, start adding distance — take one step back, then return to her and reward. Always return to her rather than calling her to you in the early stages, as walking towards her reinforces staying put.","Gradually increase the distance you step away before returning. Build up slowly — a few steps, then halfway across the room, then out of sight briefly.","Now add distractions — noise, movement, different locations. If she breaks the stay at any point, calmly go back a step and make it easier again. Always end with a clear release word like 'okay' or 'free' so she knows the stay is over."]},
       { id:45, name:"Tidy Up",           emoji:"🧹", difficulty:"Medium", time:"4 hours", prerequisite:"Drop",       description:"Nova tidies her toys away into her toy box!",
         videos:[{id:"K8RYBsAbt-E",title:"Dogs Trust – Teaching your dog to tidy up!"},{id:"O34UGTnfQ08",title:"Training Positive – Dog Training Tutorial: Clean Up"}],
         steps:["Have the toy box out and offer Nova a toy — ask her to 'drop' into the box and reward.","Repeat. If she misses the box, don't reward.","Build up the distance she carries the toy before dropping.","Offer the toy at gradually increasing distances. Drop the 'drop' cue once reliable.","Put the toy on the floor and point — reward when she picks it up and puts it in the box.","Add the cue 'tidy up' and reward in the same way."]}
@@ -202,7 +205,7 @@
       const trick      = openId ? tricks.find(t => t.id === openId) : null;
       const learnedCnt = learned.size;
       const ipCnt      = inProgress.size;
-      const pct        = Math.round((learnedCnt / 45) * 100);
+      const pct        = Math.round((learnedCnt / 46) * 100);
 
       return (
         <>
@@ -299,18 +302,18 @@
             <div className="hdr">
               <div className="hdr-paws">🐾 🐾 🐾</div>
               <h1>Nova's Trick School</h1>
-              <p>45 tricks to teach your golden girl 🦴</p>
+              <p>46 tricks to teach your golden girl 🦴</p>
             </div>
 
             <div className="stats">
-              <div className="sc"><div className="sn">45</div><div className="sl">Total</div></div>
+              <div className="sc"><div className="sn">46</div><div className="sl">Total</div></div>
               <div className="sc"><div className="sn" style={{color:"#ffb300"}}>{ipCnt}</div><div className="sl">Learning</div></div>
               <div className="sc"><div className="sn" style={{color:"#43a047"}}>{learnedCnt}</div><div className="sl">Learned</div></div>
               <div className="sc"><div className="sn">{pct}%</div><div className="sl">Done</div></div>
             </div>
 
             <div className="prog">
-              <div className="pl"><span>Nova's Progress 🌟</span><span>{learnedCnt}/45</span></div>
+              <div className="pl"><span>Nova's Progress 🌟</span><span>{learnedCnt}/46</span></div>
               <div className="pt"><div className="pf" style={{width:`${pct}%`}}/></div>
             </div>
 
