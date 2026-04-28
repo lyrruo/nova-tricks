@@ -171,6 +171,8 @@
     };
 
     function App() {
+      const [dogName,    setDogName]    = useState("");
+      const [nameInput,  setNameInput]  = useState("");
       const [learned,    setLearned]    = useState(new Set());
       const [inProgress, setInProgress] = useState(new Set());
       const [filter,     setFilter]     = useState("All");
@@ -178,6 +180,17 @@
       const [openId,     setOpenId]     = useState(null);
       const [tab,        setTab]        = useState("steps");
       const [activeStep, setActiveStep] = useState(0);
+
+      // Replace "Nova" with the user's dog name everywhere
+      const sub = txt => dogName ? txt.replace(/Nova/g, dogName) : txt;
+
+      const confirmName = () => {
+        const trimmed = nameInput.trim();
+        if (trimmed) {
+          setDogName(trimmed);
+          document.title = `${trimmed}'s Trick School 🐾`;
+        }
+      };
 
       const openModal  = id => { setOpenId(id); setTab("steps"); setActiveStep(0); };
       const closeModal = ()  => setOpenId(null);
@@ -296,13 +309,61 @@
             .macts{display:flex;gap:8px;padding:13px 17px 0;}
             .mact{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
             .mcls{display:block;width:calc(100% - 34px);margin:11px 17px 0;padding:13px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#f0e4d0;color:#7a6050;text-align:center;}
+            /* ── Welcome screen ── */
+            .welcome{min-height:100vh;background:linear-gradient(160deg,#fdf6ec 0%,#fbe8cc 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;font-family:'Nunito',sans-serif;text-align:center;}
+            .welcome-paws{font-size:48px;margin-bottom:4px;letter-spacing:8px;}
+            .welcome h1{font-family:'Fredoka One',cursive;font-size:36px;color:#c8832a;line-height:1.15;margin-bottom:10px;}
+            .welcome p{font-size:15px;color:#7a6050;font-weight:600;line-height:1.6;margin-bottom:32px;max-width:320px;}
+            .welcome-dog{font-size:90px;margin-bottom:24px;animation:wag 1.8s ease-in-out infinite;}
+            @keyframes wag{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(6deg);}}
+            .welcome-label{font-size:13px;font-weight:700;color:#a08060;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+            .welcome-input{width:100%;max-width:320px;padding:14px 18px;border:2.5px solid #f0e4d0;border-radius:16px;font-family:'Fredoka One',cursive;font-size:22px;color:#3d2c1e;background:#fff;outline:none;text-align:center;transition:border-color .2s;box-shadow:0 2px 12px rgba(200,131,42,.10);}
+            .welcome-input:focus{border-color:#c8832a;}
+            .welcome-input::placeholder{color:#d4b896;font-family:'Nunito',sans-serif;font-size:16px;font-weight:600;}
+            .welcome-btn{margin-top:16px;width:100%;max-width:320px;padding:16px;border-radius:16px;border:none;font-family:'Fredoka One',cursive;font-size:20px;color:#fff;background:linear-gradient(135deg,#c8832a,#e8a94a);cursor:pointer;box-shadow:0 4px 16px rgba(200,131,42,.35);transition:all .2s;}
+            .welcome-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,131,42,.45);}
+            .welcome-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+            .welcome-note{margin-top:16px;font-size:12px;color:#b09070;font-weight:600;}
+            .change-name{background:none;border:none;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#a08060;cursor:pointer;text-decoration:underline;padding:0;margin-left:6px;}
           `}</style>
 
           <div className="app">
+
+            {/* ── Welcome screen ── */}
+            {!dogName && (
+              <div className="welcome">
+                <div className="welcome-paws">🐾🐾🐾</div>
+                <div className="welcome-dog">🐕</div>
+                <h1>Welcome to<br/>Trick School!</h1>
+                <p>46 fun tricks to teach your dog, with step-by-step guides and YouTube videos for every single one.</p>
+                <div className="welcome-label">What's your dog's name?</div>
+                <input
+                  className="welcome-input"
+                  placeholder="e.g. Nova, Buddy, Bella…"
+                  value={nameInput}
+                  onChange={e => setNameInput(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && confirmName()}
+                  autoFocus
+                />
+                <button
+                  className="welcome-btn"
+                  disabled={!nameInput.trim()}
+                  onClick={confirmName}
+                >
+                  Let's go! 🦴
+                </button>
+                <div className="welcome-note">You can change the name any time in the app.</div>
+              </div>
+            )}
+
+            {/* ── Main app ── */}
+            {dogName && (<>
             <div className="hdr">
               <div className="hdr-paws">🐾 🐾 🐾</div>
-              <h1>Nova's Trick School</h1>
-              <p>46 tricks to teach your golden 🦴</p>
+              <h1>{dogName}'s Trick School</h1>
+              <p>46 tricks to teach your {dogName.toLowerCase() === "nova" ? "golden girl" : "good girl"} 🦴
+                <button className="change-name" onClick={() => { setDogName(""); setNameInput(""); }}>✏️ change name</button>
+              </p>
             </div>
 
             <div className="stats">
@@ -313,7 +374,7 @@
             </div>
 
             <div className="prog">
-              <div className="pl"><span>Your Golden's Progress 🌟</span><span>{learnedCnt}/46</span></div>
+              <div className="pl"><span>{dogName}'s Progress 🌟</span><span>{learnedCnt}/46</span></div>
               <div className="pt"><div className="pf" style={{width:`${pct}%`}}/></div>
             </div>
 
@@ -369,7 +430,7 @@
                     <div className="memi">{trick.emoji}</div>
                     <div>
                       <div className="mtitle">{trick.name}</div>
-                      <div className="mdesc">{trick.description}</div>
+                      <div className="mdesc">{sub(trick.description)}</div>
                     </div>
                   </div>
 
@@ -398,7 +459,7 @@
                     </div>
                     <div className="scontent">
                       <div className="snum">Step {activeStep+1} of {trick.steps.length}</div>
-                      <div className="stxt">{trick.steps[activeStep]}</div>
+                      <div className="stxt">{sub(trick.steps[activeStep])}</div>
                     </div>
                     <div className="sbtns">
                       <button className="snbtn prev" disabled={activeStep===0}
@@ -449,13 +510,14 @@
                         ? {background:"#43a047",color:"#fff"}
                         : {background:"#e8f5e9",color:"#2e7d32",border:"2px solid #a5d6a7"}}
                       onClick={()=>toggleLearned(trick.id)}>
-                      {learned.has(trick.id)?"⭐ Nova got it!":"⭐ Nova nailed it!"}
+                      {learned.has(trick.id)?`⭐ ${dogName} got it!`:`⭐ ${dogName} nailed it!`}
                     </button>
                   </div>
                   <button className="mcls" onClick={closeModal}>Close</button>
                 </div>
               </div>
             )}
+            </>)}
           </div>
         </>
       );
