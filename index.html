@@ -3,7 +3,46 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nova's Trick School 🐾</title>
+  <title>Trick School 🐾</title>
+
+  <!-- PWA meta tags -->
+  <meta name="theme-color" content="#c8832a"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Trick School"/>
+  <link rel="manifest" id="pwa-manifest"/>
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='115' fill='%23c8832a'/><text x='256' y='340' font-size='320' text-anchor='middle' font-family='serif'>🐾</text></svg>"/>
+
+  <!-- Inject PWA manifest as Blob URL (works on HTTPS) -->
+  <script>
+    (function(){
+      const manifest = {
+        name: "Dog Trick School",
+        short_name: "Trick School",
+        description: "46 tricks to teach your dog, step by step.",
+        start_url: "./",
+        display: "standalone",
+        orientation: "portrait",
+        background_color: "#fdf6ec",
+        theme_color: "#c8832a",
+        icons: [
+          { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='115' fill='%23c8832a'/><text x='256' y='340' font-size='320' text-anchor='middle' font-family='serif'>🐾</text></svg>", sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+      document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+    })();
+
+    // Register service worker for offline support
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .catch(() => {}); // silently fail if sw.js not present
+      });
+    }
+  </script>
+
   <!-- React + ReactDOM from CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -171,10 +210,15 @@
     };
 
     function App() {
-      const [dogName,    setDogName]    = useState("");
+      // ── Persistent state — reads from localStorage on first load ──
+      const [dogName,    setDogName]    = useState(() => localStorage.getItem('ts_dogName') || "");
       const [nameInput,  setNameInput]  = useState("");
-      const [learned,    setLearned]    = useState(new Set());
-      const [inProgress, setInProgress] = useState(new Set());
+      const [learned,    setLearned]    = useState(() => {
+        try { return new Set(JSON.parse(localStorage.getItem('ts_learned') || '[]')); } catch { return new Set(); }
+      });
+      const [inProgress, setInProgress] = useState(() => {
+        try { return new Set(JSON.parse(localStorage.getItem('ts_inProgress') || '[]')); } catch { return new Set(); }
+      });
       const [filter,     setFilter]     = useState("All");
       const [search,     setSearch]     = useState("");
       const [openId,     setOpenId]     = useState(null);
@@ -188,21 +232,41 @@
         const trimmed = nameInput.trim();
         if (trimmed) {
           setDogName(trimmed);
+          localStorage.setItem('ts_dogName', trimmed);
           document.title = `${trimmed}'s Trick School 🐾`;
         }
       };
+
+      // Set title on load if name already saved
+      if (dogName) document.title = `${dogName}'s Trick School 🐾`;
 
       const openModal  = id => { setOpenId(id); setTab("steps"); setActiveStep(0); };
       const closeModal = ()  => setOpenId(null);
 
       const toggleLearned = id => setLearned(prev => {
         const n = new Set(prev);
-        if (n.has(id)) { n.delete(id); } else { n.add(id); setInProgress(p => { const m=new Set(p); m.delete(id); return m; }); }
+        if (n.has(id)) { n.delete(id); } else {
+          n.add(id);
+          setInProgress(p => {
+            const m = new Set(p); m.delete(id);
+            localStorage.setItem('ts_inProgress', JSON.stringify([...m]));
+            return m;
+          });
+        }
+        localStorage.setItem('ts_learned', JSON.stringify([...n]));
         return n;
       });
       const toggleInProgress = id => setInProgress(prev => {
         const n = new Set(prev);
-        if (n.has(id)) { n.delete(id); } else { n.add(id); setLearned(p => { const m=new Set(p); m.delete(id); return m; }); }
+        if (n.has(id)) { n.delete(id); } else {
+          n.add(id);
+          setLearned(p => {
+            const m = new Set(p); m.delete(id);
+            localStorage.setItem('ts_learned', JSON.stringify([...m]));
+            return m;
+          });
+        }
+        localStorage.setItem('ts_inProgress', JSON.stringify([...n]));
         return n;
       });
 
@@ -362,7 +426,7 @@
               <div className="hdr-paws">🐾 🐾 🐾</div>
               <h1>{dogName}'s Trick School</h1>
               <p>46 tricks to teach your {dogName.toLowerCase() === "nova" ? "golden girl" : "good girl"} 🦴
-                <button className="change-name" onClick={() => { setDogName(""); setNameInput(""); }}>✏️ change name</button>
+                <button className="change-name" onClick={() => { setDogName(""); setNameInput(""); localStorage.removeItem('ts_dogName'); }}>✏️ change name</button>
               </p>
             </div>
 
