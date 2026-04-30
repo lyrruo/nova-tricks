@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -6,6 +7,7 @@
   <title>Trick School 🐾</title>
 
   <!-- PWA meta tags -->
+
   <meta name="theme-color" content="#c8832a"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -15,6 +17,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='115' fill='%23c8832a'/><text x='256' y='340' font-size='320' text-anchor='middle' font-family='serif'>🐾</text></svg>"/>
 
   <!-- Inject PWA manifest as Blob URL (works on HTTPS) -->
+
   <script>
     (function(){
       const manifest = {
@@ -44,10 +47,15 @@
   </script>
 
   <!-- React + ReactDOM from CDN -->
+
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
   <!-- Babel so we can write JSX inline -->
+
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
@@ -287,308 +295,536 @@
       return (
         <>
           <style>{`
-            .app{min-height:100vh;background:#fdf6ec;font-family:'Nunito',sans-serif;color:#3d2c1e;max-width:480px;margin:0 auto;}
-            .hdr{background:linear-gradient(135deg,#c8832a,#e8a94a,#d4903a);padding:28px 20px 22px;text-align:center;position:relative;overflow:hidden;}
-            .hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,.08);border-radius:50%;}
-            .hdr::after{content:'';position:absolute;bottom:-50px;left:-20px;width:140px;height:140px;background:rgba(255,255,255,.06);border-radius:50%;}
-            .hdr-paws{font-size:22px;letter-spacing:6px;margin-bottom:5px;opacity:.8;}
-            .hdr h1{font-family:'Fredoka One',cursive;font-size:32px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.15);line-height:1.1;margin-bottom:3px;}
-            .hdr p{color:rgba(255,255,255,.9);font-size:13px;font-weight:600;}
-            .stats{display:flex;gap:9px;padding:13px 13px 0;flex-wrap:wrap;}
-            .sc{flex:1;min-width:68px;background:#fff;border-radius:13px;padding:11px 9px;text-align:center;box-shadow:0 2px 8px rgba(200,131,42,.10);border:2px solid #f5e0c0;}
-            .sn{font-family:'Fredoka One',cursive;font-size:24px;color:#c8832a;line-height:1;}
-            .sl{font-size:10px;color:#a08060;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
-            .prog{padding:11px 13px 0;}
-            .pl{font-size:11px;font-weight:700;color:#a08060;margin-bottom:4px;display:flex;justify-content:space-between;}
-            .pt{background:#f0e4d0;border-radius:20px;height:9px;overflow:hidden;}
-            .pf{height:100%;border-radius:20px;background:linear-gradient(90deg,#c8832a,#e8a94a);transition:width .5s;}
-            .ctrl{padding:11px 13px 0;display:flex;flex-direction:column;gap:7px;}
-            .sb{width:100%;padding:10px 13px;border:2px solid #f0e4d0;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;color:#3d2c1e;background:#fff;outline:none;transition:border-color .2s;}
-            .sb:focus{border-color:#c8832a;}
-            .fr{display:flex;gap:6px;flex-wrap:wrap;}
-            .fb{padding:6px 11px;border-radius:17px;border:2px solid #f0e4d0;background:#fff;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#a08060;cursor:pointer;transition:all .2s;white-space:nowrap;}
-            .fb.active{background:#c8832a;border-color:#c8832a;color:#fff;}
-            .rc{padding:9px 13px 3px;font-size:11px;color:#a08060;font-weight:600;}
-            .grid{padding:5px 13px 24px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-            .card{background:#fff;border-radius:15px;padding:12px;box-shadow:0 2px 10px rgba(200,131,42,.08);border:2px solid #f5e0c0;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
-            .card.learned{border-color:#a5d6a7;background:#f9fff9;}
-            .card.ip{border-color:#ffe082;background:#fffdf5;}
-            .card:active{transform:scale(.97);}
-            .ce{font-size:27px;display:block;margin-bottom:4px;}
-            .cn{font-family:'Fredoka One',cursive;font-size:14px;color:#3d2c1e;margin-bottom:3px;line-height:1.2;}
-            .cbadge{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;margin-bottom:5px;}
-            .cm{font-size:10px;color:#b09070;font-weight:600;line-height:1.6;}
-            .cacts{display:flex;gap:5px;margin-top:7px;}
-            .ab{flex:1;padding:5px 3px;border-radius:8px;border:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;}
-            .ab-p{background:#fff8e1;color:#f57f17;border:1.5px solid #ffe082;}
-            .ab-p.on{background:#ffb300;color:#fff;border-color:#ffb300;}
-            .ab-l{background:#e8f5e9;color:#2e7d32;border:1.5px solid #a5d6a7;}
-            .ab-l.on{background:#43a047;color:#fff;border-color:#43a047;}
-            .sbadge{position:absolute;top:8px;right:8px;font-size:13px;}
-            .empty{text-align:center;padding:36px 16px;color:#b09070;}
-            .empty .eg{font-size:42px;display:block;margin-bottom:9px;}
-            .empty p{font-size:14px;font-weight:600;}
-            .ov{position:fixed;inset:0;background:rgba(61,44,30,.55);z-index:100;display:flex;align-items:flex-end;justify-content:center;}
-            .modal{background:#fdf6ec;border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:0 0 30px;animation:up .28s ease;}
-            @keyframes up{from{transform:translateY(100%);}to{transform:translateY(0);}}
-            .mhandle{width:36px;height:4px;background:#d4b896;border-radius:4px;margin:10px auto 0;}
-            .mhdr{padding:13px 17px 0;display:flex;align-items:flex-start;gap:10px;}
-            .memi{font-size:42px;line-height:1;flex-shrink:0;}
-            .mtitle{font-family:'Fredoka One',cursive;font-size:22px;color:#3d2c1e;line-height:1.2;}
-            .mdesc{font-size:12px;color:#7a6050;margin-top:3px;line-height:1.5;}
-            .mtags{padding:9px 17px 0;display:flex;gap:6px;flex-wrap:wrap;}
-            .mtag{padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;background:#f5e0c0;color:#a08060;}
-            .tabs{display:flex;margin:12px 17px 0;background:#f0e4d0;border-radius:11px;padding:3px;gap:3px;}
-            .tabbtn{flex:1;padding:8px 5px;border-radius:9px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:#a08060;}
-            .tabbtn.active{background:#fff;color:#c8832a;box-shadow:0 1px 4px rgba(200,131,42,.18);}
-            .snav{padding:10px 17px 0;display:flex;gap:5px;flex-wrap:wrap;}
-            .sdot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;background:#f0e4d0;color:#a08060;border:2px solid transparent;flex-shrink:0;}
-            .sdot.active{background:#c8832a;color:#fff;border-color:#c8832a;}
-            .sdot.done{background:#e8f5e9;color:#43a047;border-color:#a5d6a7;}
-            .scontent{margin:11px 17px 0;background:#fff;border-radius:15px;padding:15px;border:2px solid #f0e4d0;min-height:85px;}
-            .snum{font-family:'Fredoka One',cursive;color:#c8832a;font-size:12px;margin-bottom:5px;}
-            .stxt{font-size:14px;line-height:1.6;color:#3d2c1e;}
-            .sbtns{display:flex;gap:8px;padding:11px 17px 0;}
-            .snbtn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
-            .snbtn.prev{background:#f0e4d0;color:#a08060;}
-            .snbtn.next{background:#c8832a;color:#fff;}
-            .snbtn:disabled{opacity:.4;cursor:not-allowed;}
-            .vtab{padding:12px 17px 0;}
-            .vcards{display:flex;flex-direction:column;gap:10px;}
-            .vcard{display:flex;align-items:center;gap:11px;background:#fff;border-radius:14px;border:2px solid #f0e4d0;overflow:hidden;text-decoration:none;color:inherit;transition:all .2s;}
-            .vcard:hover{border-color:#c8832a;box-shadow:0 3px 14px rgba(200,131,42,.18);transform:translateY(-1px);}
-            .vcard:active{transform:scale(0.98);}
-            .vthumb{position:relative;width:110px;min-width:110px;overflow:hidden;background:#1a1a1a;aspect-ratio:16/9;}
-            .vthumb img{width:100%;height:100%;object-fit:cover;display:block;}
-            .vplay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(200,131,42,.45);}
-            .vplay-circle{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);}
-            .vplay-tri{width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid #c8832a;margin-left:2px;}
-            .vinfo{flex:1;padding:10px 11px 10px 0;}
-            .vnum{font-size:10px;font-weight:700;color:#c8832a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
-            .vtitle{font-size:12px;font-weight:700;color:#3d2c1e;line-height:1.4;}
-            .vylink{font-size:10px;color:#a08060;font-weight:600;margin-top:4px;}
-            .novid{background:#f5e0c0;border-radius:15px;padding:22px;text-align:center;color:#a08060;}
-            .novid .nve{font-size:34px;display:block;margin-bottom:7px;}
-            .novid p{font-size:12px;font-weight:600;line-height:1.5;}
-            .macts{display:flex;gap:8px;padding:13px 17px 0;}
-            .mact{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
-            .mcls{display:block;width:calc(100% - 34px);margin:11px 17px 0;padding:13px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#f0e4d0;color:#7a6050;text-align:center;}
-            /* ── Welcome screen ── */
-            .welcome{min-height:100vh;background:linear-gradient(160deg,#fdf6ec 0%,#fbe8cc 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;font-family:'Nunito',sans-serif;text-align:center;}
-            .welcome-paws{font-size:48px;margin-bottom:4px;letter-spacing:8px;}
-            .welcome h1{font-family:'Fredoka One',cursive;font-size:36px;color:#c8832a;line-height:1.15;margin-bottom:10px;}
-            .welcome p{font-size:15px;color:#7a6050;font-weight:600;line-height:1.6;margin-bottom:32px;max-width:320px;}
-            .welcome-dog{font-size:90px;margin-bottom:24px;animation:wag 1.8s ease-in-out infinite;}
-            @keyframes wag{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(6deg);}}
-            .welcome-label{font-size:13px;font-weight:700;color:#a08060;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
-            .welcome-input{width:100%;max-width:320px;padding:14px 18px;border:2.5px solid #f0e4d0;border-radius:16px;font-family:'Fredoka One',cursive;font-size:22px;color:#3d2c1e;background:#fff;outline:none;text-align:center;transition:border-color .2s;box-shadow:0 2px 12px rgba(200,131,42,.10);}
-            .welcome-input:focus{border-color:#c8832a;}
-            .welcome-input::placeholder{color:#d4b896;font-family:'Nunito',sans-serif;font-size:16px;font-weight:600;}
-            .welcome-btn{margin-top:16px;width:100%;max-width:320px;padding:16px;border-radius:16px;border:none;font-family:'Fredoka One',cursive;font-size:20px;color:#fff;background:linear-gradient(135deg,#c8832a,#e8a94a);cursor:pointer;box-shadow:0 4px 16px rgba(200,131,42,.35);transition:all .2s;}
-            .welcome-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,131,42,.45);}
-            .welcome-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-            .welcome-note{margin-top:16px;font-size:12px;color:#b09070;font-weight:600;}
-            .change-name{background:none;border:none;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#a08060;cursor:pointer;text-decoration:underline;padding:0;margin-left:6px;}
-          `}</style>
-
-          <div className="app">
-
-            {/* ── Welcome screen ── */}
-            {!dogName && (
-              <div className="welcome">
-                <div className="welcome-paws">🐾🐾🐾</div>
-                <div className="welcome-dog">🐕</div>
-                <h1>Welcome to<br/>Trick School!</h1>
-                <p>46 fun tricks to teach your dog, with step-by-step guides and YouTube videos for every single one.</p>
-                <div className="welcome-label">What's your dog's name?</div>
-                <input
-                  className="welcome-input"
-                  placeholder="e.g. Nova, Buddy, Bella…"
-                  value={nameInput}
-                  onChange={e => setNameInput(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && confirmName()}
-                  autoFocus
-                />
-                <button
-                  className="welcome-btn"
-                  disabled={!nameInput.trim()}
-                  onClick={confirmName}
-                >
-                  Let's go! 🦴
-                </button>
-                <div className="welcome-note">You can change the name any time in the app.</div>
-              </div>
-            )}
-
-            {/* ── Main app ── */}
-            {dogName && (<>
-            <div className="hdr">
-              <div className="hdr-paws">🐾 🐾 🐾</div>
-              <h1>{dogName}'s Trick School</h1>
-              <p>46 tricks to teach your {dogName.toLowerCase() === "nova" ? "golden girl" : "good girl"} 🦴
-                <button className="change-name" onClick={() => { setDogName(""); setNameInput(""); localStorage.removeItem('ts_dogName'); }}>✏️ change name</button>
-              </p>
-            </div>
-
-            <div className="stats">
-              <div className="sc"><div className="sn">46</div><div className="sl">Total</div></div>
-              <div className="sc"><div className="sn" style={{color:"#ffb300"}}>{ipCnt}</div><div className="sl">Learning</div></div>
-              <div className="sc"><div className="sn" style={{color:"#43a047"}}>{learnedCnt}</div><div className="sl">Learned</div></div>
-              <div className="sc"><div className="sn">{pct}%</div><div className="sl">Done</div></div>
-            </div>
-
-            <div className="prog">
-              <div className="pl"><span>{dogName}'s Progress 🌟</span><span>{learnedCnt}/46</span></div>
-              <div className="pt"><div className="pf" style={{width:`${pct}%`}}/></div>
-            </div>
-
-            <div className="ctrl">
-              <input className="sb" placeholder="🔍 Search tricks…" value={search} onChange={e=>setSearch(e.target.value)}/>
-              <div className="fr">
-                {["All","Easy","Medium","Hard","Learning","Learned"].map(f=>(
-                  <button key={f} className={`fb${filter===f?" active":""}`} onClick={()=>setFilter(f)}>
-                    {f==="Easy"?"🟢 Easy":f==="Medium"?"🟡 Medium":f==="Hard"?"🔴 Hard"
-                      :f==="Learned"?"⭐ Learned":f==="Learning"?"🔥 Learning":f}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="rc">{filtered.length} trick{filtered.length!==1?"s":""}</div>
-
-            {filtered.length===0
-              ? <div className="empty"><span className="eg">🐕</span><p>No tricks found!<br/>Try a different filter.</p></div>
-              : <div className="grid">
-                  {filtered.map(t => {
-                    const dc = DC[t.difficulty];
-                    const isl = learned.has(t.id), isip = inProgress.has(t.id);
-                    return (
-                      <div key={t.id} className={`card${isl?" learned":""}${isip?" ip":""}`} onClick={()=>openModal(t.id)}>
-                        {(isl||isip) && <div className="sbadge">{isl?"⭐":"🔥"}</div>}
-                        <span className="ce">{t.emoji}</span>
-                        <div className="cn">{t.name}</div>
-                        <span className="cbadge" style={{background:dc.bg,color:dc.text}}>{t.difficulty}</span>
-                        <div className="cm">⏱ {t.time}</div>
-                        {t.prerequisite!=="None" && <div className="cm">📌 {t.prerequisite}</div>}
-                        <div className="cm">▶ {t.videos.length} video{t.videos.length!==1?"s":""}</div>
-                        <div className="cacts" onClick={e=>e.stopPropagation()}>
-                          <button className={`ab ab-p${isip?" on":""}`} onClick={()=>toggleInProgress(t.id)}>
-                            {isip?"🔥 On it!":"🔥 Start"}
-                          </button>
-                          <button className={`ab ab-l${isl?" on":""}`} onClick={()=>toggleLearned(t.id)}>
-                            {isl?"⭐ Done!":"⭐ Done"}
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+            /* ── Reset & base ── */
+            html,body{height:100%;overscroll-behavior:none;}
+            .app{
+              min-height:100vh;
+              min-height:100dvh;
+              background:#f7f2ec;
+              font-family:'Nunito',sans-serif;
+              color:#2d1f0e;
+              max-width:480px;
+              margin:0 auto;
+              display:flex;
+              flex-direction:column;
+              position:relative;
             }
 
-            {trick && (
-              <div className="ov" onClick={closeModal}>
-                <div className="modal" onClick={e=>e.stopPropagation()}>
-                  <div className="mhandle"/>
+            /* ── Header ── */
+            .hdr{
+              background:linear-gradient(150deg,#b8721a 0%,#d4903a 50%,#e8a94a 100%);
+              padding:52px 20px 20px;
+              padding-top:max(52px, calc(44px + env(safe-area-inset-top)));
+              position:sticky;top:0;z-index:10;
+              box-shadow:0 2px 16px rgba(180,100,20,.25);
+            }
+            .hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+            .hdr-title{font-family:'Fredoka One',cursive;font-size:26px;color:#fff;line-height:1;text-shadow:0 1px 6px rgba(0,0,0,.15);}
+            .hdr-sub{font-size:12px;color:rgba(255,255,255,.8);font-weight:700;margin-top:2px;}
+            .hdr-rename{background:rgba(255,255,255,.2);border:none;border-radius:20px;padding:6px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:#fff;cursor:pointer;transition:background .2s;min-height:36px;}
+            .hdr-rename:active{background:rgba(255,255,255,.35);}
+            /* progress bar in header */
+            .hdr-prog{background:rgba(255,255,255,.25);border-radius:20px;height:8px;overflow:hidden;margin-bottom:4px;}
+            .hdr-pf{height:100%;border-radius:20px;background:rgba(255,255,255,.9);transition:width .6s ease;}
+            .hdr-prog-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.85);font-weight:700;}
 
-                  <div className="mhdr">
-                    <div className="memi">{trick.emoji}</div>
-                    <div>
-                      <div className="mtitle">{trick.name}</div>
-                      <div className="mdesc">{sub(trick.description)}</div>
-                    </div>
-                  </div>
+            /* ── Search bar ── */
+            .search-wrap{padding:14px 16px 0;}
+            .search-inp{
+              width:100%;padding:13px 16px 13px 42px;
+              border:none;border-radius:14px;
+              font-family:'Nunito',sans-serif;font-size:15px;color:#2d1f0e;
+              background:#fff;outline:none;
+              box-shadow:0 1px 8px rgba(180,100,20,.10);
+              background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23c8832a' stroke-width='2.5' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+              background-repeat:no-repeat;background-position:13px center;
+              transition:box-shadow .2s;
+            }
+            .search-inp:focus{box-shadow:0 0 0 2px #c8832a, 0 1px 8px rgba(180,100,20,.10);}
 
-                  <div className="mtags">
-                    <span className="mtag" style={{background:DC[trick.difficulty].bg,color:DC[trick.difficulty].text}}>
-                      {trick.difficulty}
-                    </span>
-                    <span className="mtag">⏱ {trick.time}</span>
-                    {trick.prerequisite!=="None" && <span className="mtag">📌 {trick.prerequisite}</span>}
-                    <span className="mtag">▶ {trick.videos.length} video{trick.videos.length!==1?"s":""}</span>
-                  </div>
+            /* ── Filter pills ── */
+            .filters{
+              display:flex;gap:8px;
+              padding:12px 16px;
+              overflow-x:auto;
+              -webkit-overflow-scrolling:touch;
+              scrollbar-width:none;
+            }
+            .filters::-webkit-scrollbar{display:none;}
+            .fpill{
+              flex-shrink:0;
+              padding:0 16px;height:36px;
+              border-radius:18px;border:2px solid #e8d8c0;
+              background:#fff;font-family:'Nunito',sans-serif;
+              font-size:13px;font-weight:700;color:#a08060;
+              cursor:pointer;transition:all .18s;
+              display:flex;align-items:center;gap:5px;
+              white-space:nowrap;
+            }
+            .fpill.on{background:#c8832a;border-color:#c8832a;color:#fff;box-shadow:0 2px 10px rgba(200,131,42,.35);}
+            .fpill:active{transform:scale(.94);}
 
-                  <div className="tabs">
-                    <button className={`tabbtn${tab==="steps"?" active":""}`} onClick={()=>setTab("steps")}>📋 Steps</button>
-                    <button className={`tabbtn${tab==="video"?" active":""}`} onClick={()=>setTab("video")}>▶️ Watch</button>
-                  </div>
+            /* ── Stats row ── */
+            .stats{display:flex;gap:10px;padding:0 16px 4px;}
+            .sc{
+              flex:1;background:#fff;border-radius:14px;
+              padding:12px 8px;text-align:center;
+              box-shadow:0 1px 6px rgba(180,100,20,.08);
+              border:1.5px solid #ede0cc;
+            }
+            .sn{font-family:'Fredoka One',cursive;font-size:22px;color:#c8832a;line-height:1;}
+            .sl{font-size:10px;color:#a08060;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
 
-                  {tab==="steps" && <>
-                    <div className="snav">
-                      {trick.steps.map((_,i) => (
-                        <div key={i} className={`sdot${i===activeStep?" active":i<activeStep?" done":""}`}
-                          onClick={()=>setActiveStep(i)}>
-                          {i<activeStep?"✓":i+1}
-                        </div>
-                      ))}
-                    </div>
-                    <div className="scontent">
-                      <div className="snum">Step {activeStep+1} of {trick.steps.length}</div>
-                      <div className="stxt">{sub(trick.steps[activeStep])}</div>
-                    </div>
-                    <div className="sbtns">
-                      <button className="snbtn prev" disabled={activeStep===0}
-                        onClick={()=>setActiveStep(s=>s-1)}>← Back</button>
-                      <button className="snbtn next" disabled={activeStep===trick.steps.length-1}
-                        onClick={()=>setActiveStep(s=>s+1)}>Next →</button>
-                    </div>
-                  </>}
+            /* ── Tricks list ── */
+            .tricks-list{
+              display:flex;flex-direction:column;gap:10px;
+              padding:4px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+            }
+            .rc{font-size:12px;color:#a08060;font-weight:700;padding:0 16px 4px;text-transform:uppercase;letter-spacing:.4px;}
 
-                  {tab==="video" && (
-                    <div className="vtab">
-                      {trick.videos.length===0
-                        ? <div className="novid"><span className="nve">🎬</span><p>No video yet!</p></div>
-                        : <div className="vcards">
-                            {trick.videos.map((v,i) => (
-                              <a key={i} className="vcard"
-                                href={`https://www.youtube.com/watch?v=${v.id}`}
-                                target="_blank" rel="noopener noreferrer">
-                                <div className="vthumb">
-                                  <img src={`https://img.youtube.com/vi/${v.id}/mqdefault.jpg`} alt={v.title}
-                                    onError={e=>e.target.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`}/>
-                                  <div className="vplay">
-                                    <div className="vplay-circle"><div className="vplay-tri"/></div>
-                                  </div>
-                                </div>
-                                <div className="vinfo">
-                                  <div className="vnum">Video {i+1}</div>
-                                  <div className="vtitle">{v.title}</div>
-                                  <div className="vylink">▶ Watch on YouTube</div>
-                                </div>
-                              </a>
-                            ))}
-                          </div>
-                      }
-                    </div>
-                  )}
+            /* ── Trick card — full width horizontal ── */
+            .card{
+              background:#fff;border-radius:18px;
+              box-shadow:0 2px 12px rgba(180,100,20,.08);
+              border:2px solid #ede0cc;
+              cursor:pointer;
+              transition:transform .15s, box-shadow .15s;
+              overflow:hidden;
+            }
+            .card.ip{border-color:#ffd54f;background:#fffef7;}
+            .card.learned{border-color:#81c784;background:#f7fff7;}
+            .card:active{transform:scale(.985);box-shadow:0 1px 6px rgba(180,100,20,.12);}
 
-                  <div className="macts">
-                    <button className="mact"
-                      style={inProgress.has(trick.id)
-                        ? {background:"#ffb300",color:"#fff"}
-                        : {background:"#fff8e1",color:"#f57f17",border:"2px solid #ffe082"}}
-                      onClick={()=>toggleInProgress(trick.id)}>
-                      {inProgress.has(trick.id)?"🔥 Learning this!":"🔥 Mark as Learning"}
-                    </button>
-                    <button className="mact"
-                      style={learned.has(trick.id)
-                        ? {background:"#43a047",color:"#fff"}
-                        : {background:"#e8f5e9",color:"#2e7d32",border:"2px solid #a5d6a7"}}
-                      onClick={()=>toggleLearned(trick.id)}>
-                      {learned.has(trick.id)?`⭐ ${dogName} got it!`:`⭐ ${dogName} nailed it!`}
-                    </button>
-                  </div>
-                  <button className="mcls" onClick={closeModal}>Close</button>
-                </div>
-              </div>
-            )}
-            </>)}
+            /* card top row */
+            .card-top{display:flex;align-items:center;gap:14px;padding:14px 14px 10px;}
+            .card-icon{
+              width:56px;height:56px;border-radius:14px;
+              display:flex;align-items:center;justify-content:center;
+              font-size:30px;flex-shrink:0;
+            }
+            .card-body{flex:1;min-width:0;}
+            .card-name{font-family:'Fredoka One',cursive;font-size:18px;color:#2d1f0e;line-height:1.2;margin-bottom:5px;}
+            .card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+            .card-badge{padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700;}
+            .card-info{font-size:12px;color:#a08060;font-weight:600;}
+            .card-chevron{font-size:18px;color:#d4b896;flex-shrink:0;margin-left:4px;}
+
+            /* card action buttons */
+            .card-btns{display:flex;gap:0;border-top:1.5px solid #f0e4d0;}
+            .card-btn{
+              flex:1;height:48px;border:none;
+              font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+              cursor:pointer;transition:background .18s;
+              display:flex;align-items:center;justify-content:center;gap:5px;
+            }
+            .card-btn:active{filter:brightness(.92);}
+            .card-btn-l{background:#f9f6f2;color:#b09070;border-right:1.5px solid #f0e4d0;border-radius:0 0 0 16px;}
+            .card-btn-l.on{background:#fff3cd;color:#c8800a;}
+            .card-btn-r{background:#f9f6f2;color:#b09070;border-radius:0 0 16px 0;}
+            .card-btn-r.on{background:#e8f5e9;color:#2e7d32;}
+
+            /* ── Empty state ── */
+            .empty{text-align:center;padding:48px 20px;color:#b09070;}
+            .empty .eg{font-size:52px;display:block;margin-bottom:12px;}
+            .empty p{font-size:16px;font-weight:700;}
+
+            /* ── Modal overlay ── */
+            .ov{
+              position:fixed;inset:0;
+              background:rgba(40,25,10,.6);
+              z-index:100;
+              display:flex;align-items:flex-end;justify-content:center;
+              backdrop-filter:blur(3px);
+            }
+            .modal{
+              background:#f7f2ec;
+              border-radius:28px 28px 0 0;
+              width:100%;max-width:480px;
+              max-height:92vh;max-height:92dvh;
+              overflow-y:auto;
+              -webkit-overflow-scrolling:touch;
+              padding-bottom:calc(24px + env(safe-area-inset-bottom, 0px));
+              animation:up .3s cubic-bezier(.32,.72,0,1);
+            }
+            @keyframes up{from{transform:translateY(100%);}to{transform:translateY(0);}}
+            .mhandle{width:40px;height:5px;background:#ddd0bb;border-radius:4px;margin:12px auto 0;}
+
+            /* modal hero */
+            .m-hero{padding:16px 20px 0;display:flex;align-items:flex-start;gap:14px;}
+            .m-icon{width:68px;height:68px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:38px;flex-shrink:0;}
+            .m-title{font-family:'Fredoka One',cursive;font-size:26px;color:#2d1f0e;line-height:1.15;margin-bottom:4px;}
+            .m-desc{font-size:13px;color:#7a6050;line-height:1.55;}
+            .m-tags{padding:10px 20px 0;display:flex;gap:7px;flex-wrap:wrap;}
+            .m-tag{padding:5px 12px;border-radius:12px;font-size:12px;font-weight:700;background:#ede0cc;color:#8a6840;}
+
+            /* modal tabs */
+            .m-tabs{display:flex;margin:14px 20px 0;background:#ede0cc;border-radius:14px;padding:4px;gap:4px;}
+            .m-tab{
+              flex:1;height:44px;border-radius:11px;border:none;
+              font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+              cursor:pointer;transition:all .2s;
+              background:transparent;color:#a08060;
+            }
+            .m-tab.on{background:#fff;color:#c8832a;box-shadow:0 1px 6px rgba(180,100,20,.15);}
+
+            /* step dots */
+            .step-dots{padding:14px 20px 0;display:flex;gap:8px;flex-wrap:wrap;}
+            .sdot{
+              width:40px;height:40px;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;
+              font-size:14px;font-weight:700;cursor:pointer;
+              transition:all .2s;
+              background:#ede0cc;color:#a08060;
+              border:2px solid transparent;flex-shrink:0;
+            }
+            .sdot.on{background:#c8832a;color:#fff;border-color:#c8832a;box-shadow:0 2px 8px rgba(200,131,42,.35);}
+            .sdot.dn{background:#e8f5e9;color:#43a047;border-color:#81c784;}
+
+            /* step content card */
+            .step-card{
+              margin:12px 20px 0;background:#fff;
+              border-radius:18px;padding:20px;
+              border:2px solid #ede0cc;
+              min-height:110px;
+            }
+            .step-num{font-family:'Fredoka One',cursive;color:#c8832a;font-size:13px;margin-bottom:8px;}
+            .step-txt{font-size:15px;line-height:1.65;color:#2d1f0e;font-weight:600;}
+
+            /* step nav buttons */
+            .step-nav{display:flex;gap:10px;padding:12px 20px 0;}
+            .snbtn{
+              flex:1;height:54px;border-radius:14px;border:none;
+              font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
+              cursor:pointer;transition:all .2s;
+            }
+            .snbtn.prev{background:#ede0cc;color:#8a6840;}
+            .snbtn.prev:active{background:#ddd0bb;}
+            .snbtn.next{background:#c8832a;color:#fff;box-shadow:0 3px 12px rgba(200,131,42,.35);}
+            .snbtn.next:active{background:#b87220;}
+            .snbtn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
+
+            /* video tab */
+            .vtab{padding:14px 20px 0;}
+            .vcards{display:flex;flex-direction:column;gap:10px;}
+            .vcard{
+              display:flex;align-items:center;gap:0;
+              background:#fff;border-radius:16px;
+              border:2px solid #ede0cc;overflow:hidden;
+              text-decoration:none;color:inherit;
+              transition:border-color .2s,box-shadow .2s;
+            }
+            .vcard:active{transform:scale(.98);}
+            .vthumb{position:relative;width:120px;min-width:120px;aspect-ratio:16/9;overflow:hidden;background:#1a1a1a;}
+            .vthumb img{width:100%;height:100%;object-fit:cover;display:block;}
+            .vplay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(200,131,42,.4);}
+            .vplay-c{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.25);}
+            .vplay-t{width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:14px solid #c8832a;margin-left:3px;}
+            .vinfo{flex:1;padding:12px 14px;}
+            .vnum{font-size:10px;font-weight:700;color:#c8832a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+            .vtitle{font-size:13px;font-weight:700;color:#2d1f0e;line-height:1.4;}
+            .vylink{font-size:11px;color:#a08060;font-weight:700;margin-top:5px;display:flex;align-items:center;gap:4px;}
+            .novid{background:#ede0cc;border-radius:16px;padding:28px;text-align:center;color:#a08060;}
+            .novid .nve{font-size:38px;display:block;margin-bottom:8px;}
+            .novid p{font-size:13px;font-weight:700;}
+
+            /* modal action buttons */
+            .m-acts{display:flex;gap:10px;padding:16px 20px 0;}
+            .m-act{
+              flex:1;height:54px;border-radius:14px;border:none;
+              font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+              cursor:pointer;transition:all .2s;
+            }
+            .m-act:active{transform:scale(.97);}
+            .m-cls{
+              display:block;width:calc(100% - 40px);margin:12px 20px 0;
+              height:52px;border-radius:14px;border:none;
+              font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
+              cursor:pointer;background:#ede0cc;color:#7a6050;
+            }
+            .m-cls:active{background:#ddd0bb;}
+
+            /* ── Welcome screen ── */
+            .welcome{
+              min-height:100vh;min-height:100dvh;
+              background:linear-gradient(160deg,#fdf6ec 0%,#f5e0c0 100%);
+              display:flex;flex-direction:column;align-items:center;justify-content:center;
+              padding:40px 28px calc(40px + env(safe-area-inset-bottom, 0px));
+              text-align:center;
+            }
+            .welcome-dog{font-size:100px;margin-bottom:20px;animation:wag 2s ease-in-out infinite;display:block;}
+            @keyframes wag{0%,100%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}}
+            .welcome h1{font-family:'Fredoka One',cursive;font-size:38px;color:#c8832a;line-height:1.1;margin-bottom:12px;}
+            .welcome p{font-size:15px;color:#7a6050;font-weight:600;line-height:1.6;margin-bottom:36px;max-width:300px;}
+            .welcome-label{font-size:12px;font-weight:700;color:#a08060;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+            .welcome-input{
+              width:100%;max-width:320px;
+              height:58px;padding:0 20px;
+              border:2.5px solid #e0cdb0;border-radius:18px;
+              font-family:'Fredoka One',cursive;font-size:24px;
+              color:#2d1f0e;background:#fff;outline:none;text-align:center;
+              transition:border-color .2s,box-shadow .2s;
+              box-shadow:0 2px 14px rgba(200,131,42,.10);
+            }
+            .welcome-input:focus{border-color:#c8832a;box-shadow:0 0 0 3px rgba(200,131,42,.15);}
+            .welcome-input::placeholder{color:#d4b896;font-family:'Nunito',sans-serif;font-size:16px;font-weight:600;}
+            .welcome-btn{
+              margin-top:16px;width:100%;max-width:320px;height:58px;
+              border-radius:18px;border:none;
+              font-family:'Fredoka One',cursive;font-size:22px;color:#fff;
+              background:linear-gradient(135deg,#c8832a,#e8a94a);
+              cursor:pointer;box-shadow:0 4px 20px rgba(200,131,42,.40);
+              transition:all .2s;
+            }
+            .welcome-btn:active{transform:scale(.97);box-shadow:0 2px 10px rgba(200,131,42,.30);}
+            .welcome-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+            .welcome-note{margin-top:14px;font-size:12px;color:#b09070;font-weight:600;}
+          `}</style>
+
+```
+      <div className="app">
+
+        {/* ── Welcome ── */}
+        {!dogName && (
+          <div className="welcome">
+            <span className="welcome-dog">🐕</span>
+            <h1>Welcome to<br/>Trick School!</h1>
+            <p>Step-by-step guides and video tutorials to teach your dog new tricks.</p>
+            <div className="welcome-label">What's your dog's name?</div>
+            <input
+              className="welcome-input"
+              placeholder="e.g. Nova, Buddy, Bella…"
+              value={nameInput}
+              onChange={e=>setNameInput(e.target.value)}
+              onKeyDown={e=>e.key==="Enter"&&confirmName()}
+              autoFocus
+            />
+            <button className="welcome-btn" disabled={!nameInput.trim()} onClick={confirmName}>
+              Let's go! 🦴
+            </button>
+            <div className="welcome-note">Your dog's name is saved on this device.</div>
           </div>
-        </>
-      );
-    }
+        )}
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App/>);
+        {/* ── Main app ── */}
+        {dogName && (<>
+
+          {/* Sticky header */}
+          <div className="hdr">
+            <div className="hdr-top">
+              <div>
+                <div className="hdr-title">🐾 {dogName}'s Tricks</div>
+                <div className="hdr-sub">{tricks.length} tricks to learn together</div>
+              </div>
+              <button className="hdr-rename"
+                onClick={()=>{setDogName("");setNameInput("");localStorage.removeItem('ts_dogName');}}>
+                ✏️ Rename
+              </button>
+            </div>
+            <div className="hdr-prog-label">
+              <span>Progress</span>
+              <span>{learnedCnt} / {tricks.length} learned</span>
+            </div>
+            <div className="hdr-prog" style={{marginTop:5}}>
+              <div className="hdr-pf" style={{width:`${pct}%`}}/>
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="search-wrap">
+            <input className="search-inp" placeholder="Search tricks…"
+              value={search} onChange={e=>setSearch(e.target.value)}/>
+          </div>
+
+          {/* Filter pills — horizontal scroll */}
+          <div className="filters">
+            {[
+              {key:"All",   label:"All"},
+              {key:"Easy",  label:"🟢 Easy"},
+              {key:"Medium",label:"🟡 Medium"},
+              {key:"Hard",  label:"🔴 Hard"},
+              {key:"Learning",label:"🔥 Learning"},
+              {key:"Learned", label:"⭐ Learned"},
+            ].map(f=>(
+              <button key={f.key} className={`fpill${filter===f.key?" on":""}`}
+                onClick={()=>setFilter(f.key)}>
+                {f.label}
+                {f.key==="Learning" && ipCnt>0 && <span style={{background:"rgba(255,255,255,.3)",borderRadius:10,padding:"1px 6px",fontSize:11}}>{ipCnt}</span>}
+                {f.key==="Learned"  && learnedCnt>0 && <span style={{background:"rgba(255,255,255,.3)",borderRadius:10,padding:"1px 6px",fontSize:11}}>{learnedCnt}</span>}
+              </button>
+            ))}
+          </div>
+
+          {/* Stats strip */}
+          <div className="stats">
+            <div className="sc"><div className="sn">{tricks.length}</div><div className="sl">Total</div></div>
+            <div className="sc"><div className="sn" style={{color:"#f57f17"}}>{ipCnt}</div><div className="sl">Learning</div></div>
+            <div className="sc"><div className="sn" style={{color:"#43a047"}}>{learnedCnt}</div><div className="sl">Learned</div></div>
+            <div className="sc"><div className="sn">{pct}%</div><div className="sl">Done</div></div>
+          </div>
+
+          {/* Results label */}
+          <div className="rc">{filtered.length} trick{filtered.length!==1?"s":""}</div>
+
+          {/* Trick cards — full width list */}
+          {filtered.length===0
+            ? <div className="empty"><span className="eg">🐕</span><p>Nothing found.<br/>Try a different filter!</p></div>
+            : <div className="tricks-list">
+                {filtered.map(t=>{
+                  const dc=DC[t.difficulty];
+                  const isl=learned.has(t.id), isip=inProgress.has(t.id);
+                  const iconBg = t.difficulty==="Easy"?"#e8f5e9":t.difficulty==="Medium"?"#fff3e0":"#fce4ec";
+                  return (
+                    <div key={t.id} className={`card${isl?" learned":""}${isip?" ip":""}`}>
+                      {/* tappable top area */}
+                      <div className="card-top" onClick={()=>openModal(t.id)}>
+                        <div className="card-icon" style={{background:iconBg}}>{t.emoji}</div>
+                        <div className="card-body">
+                          <div className="card-name">{t.name}</div>
+                          <div className="card-meta">
+                            <span className="card-badge" style={{background:dc.bg,color:dc.text}}>{t.difficulty}</span>
+                            <span className="card-info">⏱ {t.time}</span>
+                            {t.prerequisite!=="None" && <span className="card-info">📌 {t.prerequisite}</span>}
+                          </div>
+                          {(isl||isip) && (
+                            <div style={{marginTop:5,fontSize:12,fontWeight:700,color:isl?"#43a047":"#f57f17"}}>
+                              {isl?"⭐ Learned!":"🔥 Currently learning"}
+                            </div>
+                          )}
+                        </div>
+                        <div className="card-chevron">›</div>
+                      </div>
+                      {/* action buttons */}
+                      <div className="card-btns">
+                        <button className={`card-btn card-btn-l${isip?" on":""}`}
+                          onClick={e=>{e.stopPropagation();toggleInProgress(t.id);}}>
+                          {isip?"🔥 Learning":"🔥 Start learning"}
+                        </button>
+                        <button className={`card-btn card-btn-r${isl?" on":""}`}
+                          onClick={e=>{e.stopPropagation();toggleLearned(t.id);}}>
+                          {isl?"⭐ Learned!":"⭐ Mark learned"}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+          }
+
+          {/* ── Modal ── */}
+          {trick && (
+            <div className="ov" onClick={closeModal}>
+              <div className="modal" onClick={e=>e.stopPropagation()}>
+                <div className="mhandle"/>
+
+                {/* Hero */}
+                <div className="m-hero">
+                  <div className="m-icon"
+                    style={{background:trick.difficulty==="Easy"?"#e8f5e9":trick.difficulty==="Medium"?"#fff3e0":"#fce4ec"}}>
+                    {trick.emoji}
+                  </div>
+                  <div style={{flex:1}}>
+                    <div className="m-title">{trick.name}</div>
+                    <div className="m-desc">{sub(trick.description)}</div>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="m-tags">
+                  <span className="m-tag" style={{background:DC[trick.difficulty].bg,color:DC[trick.difficulty].text}}>
+                    {trick.difficulty}
+                  </span>
+                  <span className="m-tag">⏱ {trick.time}</span>
+                  {trick.prerequisite!=="None" && <span className="m-tag">📌 {trick.prerequisite}</span>}
+                  <span className="m-tag">▶ {trick.videos.length} video{trick.videos.length!==1?"s":""}</span>
+                </div>
+
+                {/* Tabs */}
+                <div className="m-tabs">
+                  <button className={`m-tab${tab==="steps"?" on":""}`} onClick={()=>setTab("steps")}>📋 Steps</button>
+                  <button className={`m-tab${tab==="video"?" on":""}`} onClick={()=>setTab("video")}>▶️ Watch</button>
+                </div>
+
+                {/* Steps tab */}
+                {tab==="steps" && <>
+                  <div className="step-dots">
+                    {trick.steps.map((_,i)=>(
+                      <div key={i} className={`sdot${i===activeStep?" on":i<activeStep?" dn":""}`}
+                        onClick={()=>setActiveStep(i)}>
+                        {i<activeStep?"✓":i+1}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="step-card">
+                    <div className="step-num">Step {activeStep+1} of {trick.steps.length}</div>
+                    <div className="step-txt">{sub(trick.steps[activeStep])}</div>
+                  </div>
+                  <div className="step-nav">
+                    <button className="snbtn prev" disabled={activeStep===0}
+                      onClick={()=>setActiveStep(s=>s-1)}>← Back</button>
+                    <button className="snbtn next" disabled={activeStep===trick.steps.length-1}
+                      onClick={()=>setActiveStep(s=>s+1)}>Next →</button>
+                  </div>
+                </>}
+
+                {/* Video tab */}
+                {tab==="video" && (
+                  <div className="vtab">
+                    {trick.videos.length===0
+                      ? <div className="novid"><span className="nve">🎬</span><p>No video yet!</p></div>
+                      : <div className="vcards">
+                          {trick.videos.map((v,i)=>(
+                            <a key={i} className="vcard"
+                              href={`https://www.youtube.com/watch?v=${v.id}`}
+                              target="_blank" rel="noopener noreferrer">
+                              <div className="vthumb">
+                                <img src={`https://img.youtube.com/vi/${v.id}/mqdefault.jpg`} alt={v.title}
+                                  onError={e=>e.target.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`}/>
+                                <div className="vplay"><div className="vplay-c"><div className="vplay-t"/></div></div>
+                              </div>
+                              <div className="vinfo">
+                                <div className="vnum">Video {i+1}</div>
+                                <div className="vtitle">{v.title}</div>
+                                <div className="vylink">▶ Watch on YouTube</div>
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                    }
+                  </div>
+                )}
+
+                {/* Action buttons */}
+                <div className="m-acts">
+                  <button className="m-act"
+                    style={inProgress.has(trick.id)
+                      ?{background:"#ffb300",color:"#fff",boxShadow:"0 3px 12px rgba(255,179,0,.35)"}
+                      :{background:"#fff3cd",color:"#c8800a",border:"2px solid #ffe082"}}
+                    onClick={()=>toggleInProgress(trick.id)}>
+                    {inProgress.has(trick.id)?"🔥 Learning!":"🔥 Start learning"}
+                  </button>
+                  <button className="m-act"
+                    style={learned.has(trick.id)
+                      ?{background:"#43a047",color:"#fff",boxShadow:"0 3px 12px rgba(67,160,71,.35)"}
+                      :{background:"#e8f5e9",color:"#2e7d32",border:"2px solid #a5d6a7"}}
+                    onClick={()=>toggleLearned(trick.id)}>
+                    {learned.has(trick.id)?`⭐ ${dogName} got it!`:`⭐ Mark as learned`}
+                  </button>
+                </div>
+                <button className="m-cls" onClick={closeModal}>Close</button>
+              </div>
+            </div>
+          )}
+
+        </>)}
+      </div>
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App/>);
+```
+
   </script>
 </body>
 </html>
