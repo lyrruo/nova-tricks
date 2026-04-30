@@ -67,15 +67,15 @@
 
 ```
 /* ── Header ── */
-.hdr{background:linear-gradient(150deg,#6b3510 0%,#a85e1a 45%,#c8832a 100%);padding:52px 20px 20px;padding-top:max(52px,calc(44px + env(safe-area-inset-top)));position:sticky;top:0;z-index:10;box-shadow:0 3px 20px rgba(80,30,5,.45);}
+.hdr{background-color:#8B3A10;background-image:linear-gradient(180deg,#6b2c08 0%,#9e4c18 50%,#c8832a 100%);padding:52px 20px 20px;position:sticky;top:0;z-index:10;box-shadow:0 4px 20px rgba(60,20,0,.5);}
 .hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.hdr-title{font-family:'Fredoka One',cursive;font-size:26px;color:#fff;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.35);}
-.hdr-sub{font-size:12px;color:rgba(255,255,255,.95);font-weight:700;margin-top:2px;}
-.hdr-rename{background:rgba(0,0,0,.25);border:1.5px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:#fff;cursor:pointer;transition:background .2s;min-height:36px;}
-.hdr-rename:active{background:rgba(0,0,0,.4);}
-.hdr-prog{background:rgba(0,0,0,.25);border-radius:20px;height:8px;overflow:hidden;margin-top:5px;}
-.hdr-pf{height:100%;border-radius:20px;background:#fff;transition:width .6s ease;}
-.hdr-prog-label{display:flex;justify-content:space-between;font-size:11px;color:#fff;font-weight:700;}
+.hdr-title{font-family:'Fredoka One',cursive;font-size:28px;color:#fff;line-height:1;text-shadow:0 2px 6px rgba(0,0,0,.5);}
+.hdr-sub{font-size:13px;color:#ffd9a8;font-weight:700;margin-top:3px;}
+.hdr-rename{background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.4);border-radius:20px;padding:7px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:background .2s;min-height:38px;}
+.hdr-rename:active{background:rgba(0,0,0,.55);}
+.hdr-prog-label{display:flex;justify-content:space-between;font-size:12px;color:#ffd9a8;font-weight:700;margin-bottom:6px;}
+.hdr-prog{background:rgba(0,0,0,.35);border-radius:20px;height:12px;overflow:hidden;}
+.hdr-pf{height:100%;border-radius:20px;background:linear-gradient(90deg,#ffd700,#ffaa00);transition:width .6s ease;min-width:4px;}
 
 /* ── Search bar ── */
 .search-wrap{padding:14px 16px 0;}
@@ -408,6 +408,7 @@
         return n;
       });
 
+      const diffOrder = { Easy: 0, Medium: 1, Hard: 2 };
       const filtered = tricks.filter(t => {
         const dm = filter==="All" || t.difficulty===filter
           || (filter==="Learned"  && learned.has(t.id))
@@ -415,7 +416,7 @@
         const sm = t.name.toLowerCase().includes(search.toLowerCase())
           || t.description.toLowerCase().includes(search.toLowerCase());
         return dm && sm;
-      });
+      }).sort((a, b) => diffOrder[a.difficulty] - diffOrder[b.difficulty]);
 
       const trick      = openId ? tricks.find(t => t.id === openId) : null;
       const learnedCnt = learned.size;
@@ -464,11 +465,11 @@
                   </button>
                 </div>
                 <div className="hdr-prog-label">
-                  <span>Progress</span>
+                  <span>Progress 🌟</span>
                   <span>{learnedCnt} / {tricks.length} learned</span>
                 </div>
-                <div className="hdr-prog" style={{marginTop:5}}>
-                  <div className="hdr-pf" style={{width:`${pct}%`}}/>
+                <div className="hdr-prog">
+                  <div className="hdr-pf" style={{width: pct > 0 ? `${pct}%` : '4px'}}/>
                 </div>
               </div>
 
